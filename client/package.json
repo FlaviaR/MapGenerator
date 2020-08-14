@@ -2,11 +2,9 @@
   "name": "mapgenerator",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "voronoi.js",
   "scripts": {
-    "start": "node server.js", 
-    "build-client": "cd client && npm run build",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "build": "webpack --config webpack.config.js"
   },
   "repository": {
     "type": "git",
@@ -19,6 +17,10 @@
   },
   "homepage": "https://github.com/FlaviaR/MapGenerator#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "d3-delaunay": "^5.3.0",
+    "webpack": "^4.44.1"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.12"
   }
 }

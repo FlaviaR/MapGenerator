@@ -4,4 +4,5 @@ const points = [[0, 0], [0, 1], [1, 0], [1, 1]];
 const delaunay = Delaunay.from(points);
 const voronoi = delaunay.voronoi([0, 0, 960, 500]);
 
-voronoi.render()
+console.log("Hello")
+console.log(voronoi.render())

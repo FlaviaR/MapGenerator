@@ -1,0 +1,26 @@
+{
+  "name": "mapgenerator",
+  "version": "1.0.0",
+  "description": "",
+  "main": "voronoi.js",
+  "scripts": {
+    "build": "webpack --config webpack.config.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlaviaR/MapGenerator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FlaviaR/MapGenerator/issues"
+  },
+  "homepage": "https://github.com/FlaviaR/MapGenerator#readme",
+  "dependencies": {
+    "d3-delaunay": "^5.3.0",
+    "webpack": "^4.44.1"
+  },
+  "devDependencies": {
+    "webpack-cli": "^3.3.12"
+  }
+}

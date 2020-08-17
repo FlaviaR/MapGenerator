@@ -7,7 +7,7 @@ module.exports = {
 
   // Path to your entry point. From this file Webpack will begin his work
   entry: './index.js',
-  watch: true,
+  watch: false,
   // Path and filename of your result bundle.
   // Webpack will bundle all JavaScript into this file
   output: {

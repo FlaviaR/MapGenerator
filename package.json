@@ -6,7 +6,6 @@
   "scripts": {
     "start": "node server.js", 
     "build-client": "cd client && npm run build",
-    "postinstall": "webpack -p",
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "repository": {

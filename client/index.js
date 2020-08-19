@@ -1,6 +1,6 @@
 import { Delaunay } from "d3-delaunay";
 import {relaxPoints} from "./utils"
-import {generateRandomMap} from "./map_utils"
+import {isInside} from "./map_utils"
 import {Biome} from "./biomes"
 
 // TODO: 
@@ -70,10 +70,17 @@ const relaxVoronoi = () => {
 }
 
 const genRandomMap = () => {
-    points.map(point => generateRandomMap(point))
     let i = 0
     for (i; i < points.length; i++) {
-        let color = generateRandomMap(points[i]) ? biome.beach : biome.ocean
+        let color = isInside(false, points[i], width) ? biome.beach : biome.ocean
+        drawVoronoiCell(i, color)
+    }
+}
+
+const genRadialMap = () => {
+    let i = 0
+    for (i; i < points.length; i++) {
+        let color = isInside(true, points[i], width) ? biome.beach : biome.ocean
         drawVoronoiCell(i, color)
     }
 }
@@ -82,7 +89,7 @@ drawVoronoi()
 
 lloydButton.addEventListener('click', relaxVoronoi, false)
 randomButton.addEventListener('click', genRandomMap)
-// radialButton.addEventListener('click', relaxVoronoi, false)
+radialButton.addEventListener('click', genRadialMap, false)
 
 
 

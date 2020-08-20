@@ -1,25 +1,21 @@
-import { Delaunay } from "d3-delaunay";
-import {relaxPoints} from "./utils"
-import {isInside} from "./map_utils"
+import {relaxPoints, initCenters} from "./utils/utils"
+import {isInside} from "./utils/map_utils"
 import {Biome} from "./biomes"
+import {VoronoiObj} from "./voronoiObj"
 
-// TODO: 
-// lloyd relaxation
-// land / water separation
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const width = canvas.width
 const height = canvas.height
-const num = 700
+const num = 2000
 const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
 const biome = new Biome()
 
 let points = Array.from({ length: num }, () => [Math.random() * width, Math.random() * height]);
-
-let delaunay = Delaunay.from(points);
-let voronoi = delaunay.voronoi([0.5, 0.5, width - 0.5, height - 0.5]);
+let centerList = []
+let voronoiObj = new VoronoiObj(points, width, height)
 
 context.clearRect(0, 0, width, height);
 
@@ -42,7 +38,7 @@ function drawVoronoiCell(index, cellColor) {
 
     context.beginPath();
 
-    voronoi.renderCell(index, context)
+    voronoiObj.voronoi.renderCell(index, context)
 
     context.fill();
     context.stroke();
@@ -59,33 +55,36 @@ function drawVoronoi() {
 }
 
 const relaxVoronoi = () => {
-    points = relaxPoints(voronoi, points)
-
-    delaunay = Delaunay.from(points)
-    voronoi = delaunay.voronoi([0.5, 0.5, width - 0.5, height - 0.5]);
-    
-    // voronoi.update(points)
-
+    points = relaxPoints(voronoiObj.voronoi, points)
+    voronoiObj.updateVoronoi(points)
     drawVoronoi()
 }
 
 const genRandomMap = () => {
     let i = 0
-    for (i; i < points.length; i++) {
-        let color = isInside(false, points[i], width) ? biome.beach : biome.ocean
+    for (i; i < centerList.length; i++) {
+        let color = isInside(false, centerList[i].point, width) ? biome.colors.get(centerList[i].biome) : biome.colors.get("OCEAN")
         drawVoronoiCell(i, color)
     }
 }
 
 const genRadialMap = () => {
     let i = 0
-    for (i; i < points.length; i++) {
-        let color = isInside(true, points[i], width) ? biome.beach : biome.ocean
+    for (i; i < centerList.length; i++) {
+        let color = isInside(true, centerList[i].point, width) ? biome.colors.get(centerList[i].biome) : biome.colors.get("OCEAN")
         drawVoronoiCell(i, color)
     }
 }
 
+const init = () => {
+    let i = 0
+    for (i; i < points.length; i++) {
+        centerList.push(initCenters(points[i], i, voronoiObj))
+    }
+}
+
 drawVoronoi()
+init()
 
 lloydButton.addEventListener('click', relaxVoronoi, false)
 randomButton.addEventListener('click', genRandomMap)

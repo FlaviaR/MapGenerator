@@ -1,6 +1,6 @@
 export class Center {
 
-    constructor(index, point, elevation, moisture, biome, isWater, ocean, isBorder, isCoast) {
+    constructor(index, point, elevation, moisture, biome, isWater, ocean, isBorder, isCoast, corners, neighbors) {
         // this center's index within centerList
         this.index = index
         // site of voronoi face
@@ -20,6 +20,9 @@ export class Center {
         this.isBorder = isBorder
         // whether this center tile is on the coast of the island
         this.isCoast = isCoast;
+
+        this.corners = corners
+        this.neighbors = neighbors
     }
 
     print() {

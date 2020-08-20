@@ -1,16 +1,14 @@
+import {getRandomNumber} from './utils'
+
 var seedrandom = require('seedrandom');
 
 // Factor should ideally be between 1.0 and 2.0
 // lower bounds lead to more constricted islands
 const ISLAND_FACTOR = 1.15
 
-function getRandomNumber(max) {
-    return Math.floor(Math.random() * Math.floor(max));
-}
-
 // Generates a randomized map -- very sparse
 export function generateRandomMap(point) {
-    let num = Math.floor(seedrandom(point[0] + point[1] + 0.5)() * 100);
+    let num = Math.floor(seedrandom(point[0] + point[1] + 0.5)() * 100) 
     if (num % 2 == 0) return false;
     else return true;
 }
@@ -34,7 +32,6 @@ function pointLength(point) {
 // Generates a circular map using overlapping sine waves (ensue black magic)
 // Center point of a voronoi cell
 export function generateRadialMap(point) {
-    let num = Math.floor(seedrandom(point[0] + point[1] + 0.5))
     let bumps = getRandomNumber(6)
     let dipAngle = getRandomNumber(1) * 2 * Math.PI
     let startAngle = getRandomNumber(1) * 2 * Math.PI

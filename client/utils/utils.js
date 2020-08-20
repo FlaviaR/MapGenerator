@@ -1,15 +1,15 @@
 import { Corner } from "../corner"
 import { Center } from "../center"
 import {isInside} from "./map_utils"
-import { generateRandomMap } from "./map_utils"
 
 const canvas = document.getElementById("myCanvas");
 const width = canvas.width
+export const mapState = ["basic", "random", "radial", "long"]
 
 //TODO - assign temperatures / assign coast
 
 export function getRandomNumber(max) {
-	return Math.floor(Math.random() * Math.floor(max));
+	return Math.floor(Math.random() * Math.floor(max + 1));
 }
 
 /*

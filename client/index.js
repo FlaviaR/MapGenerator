@@ -1,4 +1,4 @@
-import { relaxPoints, initCenters } from "./utils/utils"
+import { relaxPoints, initCenters, mapState } from "./utils/utils"
 import { isInside } from "./utils/map_utils"
 import { Biome } from "./biomes"
 import { VoronoiObj } from "./voronoiObj"
@@ -7,15 +7,16 @@ const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const width = canvas.width
 const height = canvas.height
-const num = 2000
+const num = 800
 const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
+const extendedButton = document.getElementById("longMap");
+
 const displayBiomesCheckbox = document.getElementById("displayBiomes");
 
 const biome = new Biome()
 let displayBiome = false
-const mapState = ["basic", "random", "radial"]
 let curMap = mapState[0]
 
 let points = Array.from({ length: num }, () => [Math.random() * width, Math.random() * height]);
@@ -69,7 +70,7 @@ const genRandomMap = () => {
     curMap = mapState[1]
     let i = 0
     for (i; i < centerList.length; i++) {
-        let color = isInside(false, centerList[i].point, width) ?
+        let color = isInside(curMap, centerList[i].point, width) ?
             ((displayBiome) ? biome.colors.get(centerList[i].biome) : biome.colors.get("BEACH")) : biome.colors.get("OCEAN")
         drawVoronoiCell(i, color)
     }
@@ -80,7 +81,18 @@ const genRadialMap = () => {
 
     let i = 0
     for (i; i < centerList.length; i++) {
-        let color = isInside(true, centerList[i].point, width) ?
+        let color = isInside(curMap, centerList[i].point, width) ?
+            ((displayBiome) ? biome.colors.get(centerList[i].biome) : biome.colors.get("BEACH")) : biome.colors.get("OCEAN")
+        drawVoronoiCell(i, color)
+    }
+}
+
+const generateLongMap = () => {
+    curMap = mapState[3]
+
+    let i = 0
+    for (i; i < centerList.length; i++) {
+        let color = isInside(curMap, centerList[i].point, width) ?
             ((displayBiome) ? biome.colors.get(centerList[i].biome) : biome.colors.get("BEACH")) : biome.colors.get("OCEAN")
         drawVoronoiCell(i, color)
     }
@@ -132,6 +144,7 @@ init()
 lloydButton.addEventListener('click', relaxVoronoi, false)
 randomButton.addEventListener('click', genRandomMap)
 radialButton.addEventListener('click', genRadialMap, false)
+extendedButton.addEventListener('click', generateLongMap, false)
 displayBiomesCheckbox.addEventListener('change', function () {
     if (this.checked) {
         displayBiome = true
@@ -140,6 +153,8 @@ displayBiomesCheckbox.addEventListener('change', function () {
     }
     if (curMap == mapState[1]) genRandomMap()
     else if (curMap == mapState[2]) genRadialMap()
+    else if (curMap == mapState[3]) generateLongMap()
+
 });
 
 

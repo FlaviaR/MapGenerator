@@ -37,7 +37,6 @@ function drawPoints(index) {
 }
 
 function drawVoronoiCell(index, cellColor) {
-    context.strokeStyle = "#fff";
     context.lineWidth = 0;
     context.fillStyle = cellColor;
 

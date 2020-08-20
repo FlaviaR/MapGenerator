@@ -3,7 +3,10 @@ import { Center } from "../center"
 import {isInside} from "./map_utils"
 import { generateRandomMap } from "./map_utils"
 
-let width = 1000
+const canvas = document.getElementById("myCanvas");
+const width = canvas.width
+
+//TODO - assign temperatures / assign coast
 
 export function getRandomNumber(max) {
 	return Math.floor(Math.random() * Math.floor(max));
@@ -165,6 +168,7 @@ function setOceanBorders(center) {
 
 	return center
 }
+
 
 function initCorners(voronoiIndex, voronoiObj) {
 	let corners = []

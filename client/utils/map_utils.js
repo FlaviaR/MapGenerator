@@ -1,4 +1,5 @@
-import {getRandomNumber, mapState} from './utils'
+import {mapState} from './center_and_corner_utils'
+import {getRandomNumber} from './utils'
 
 var seedrandom = require('seedrandom');
 
@@ -8,8 +9,9 @@ const ISLAND_FACTOR = 1.07
 
 // Generates a randomized map -- very sparse
 export function generateRandomMap(point) {
-    let num = Math.floor(seedrandom(point[0] + point[1] + 0.5)() * 100) 
-    if (num % 2 == 0) return false;
+    // let num = Math.floor(seedrandom(point[0] + point[1] + 0.5)() * 100) 
+    let num = getRandomNumber(100);
+    if (num % 7 == 0) return false;
     else return true;
 }
 

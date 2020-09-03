@@ -7,7 +7,6 @@ const biome = new Biome()
 
 export const genRandomMap = (centerList, width, displayBiome, voronoiObj) => {
     let curMap = mapState[1]
-    console.log(curMap)
 
     let i = 0
     for (i; i < centerList.length; i++) {
@@ -20,7 +19,6 @@ export const genRandomMap = (centerList, width, displayBiome, voronoiObj) => {
 
 export const genRadialMap = (centerList, width, displayBiome, voronoiObj) => {
     let curMap = mapState[2]
-    console.log("Center list ", centerList)
 
     let i = 0
     for (i; i < centerList.length; i++) {
@@ -34,7 +32,6 @@ export const genRadialMap = (centerList, width, displayBiome, voronoiObj) => {
 
 export const genLongMap = (centerList, width, displayBiome, voronoiObj) => {
     let curMap = mapState[3]
-    console.log(curMap)
 
     let i = 0
     for (i; i < centerList.length; i++) {

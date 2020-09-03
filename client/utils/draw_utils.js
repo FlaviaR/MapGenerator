@@ -27,10 +27,8 @@ export function drawVoronoiCell(index, cellColor, voronoiObj) {
 }
 
 export function drawVoronoi(points, voronoiObj) {
-    console.log("Draw")
     let i = 0
     for (i; i < points.length; i++) {
-        console.log("Length ", points.length)
         drawVoronoiCell(i, random_hex_color_code(), voronoiObj)
         drawPoints(i, points)
     }

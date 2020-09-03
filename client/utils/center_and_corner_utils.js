@@ -139,11 +139,21 @@ function initCorners(voronoiIndex, voronoiObj) {
 	return corners
 }
 
+// Returns a list containing the neighboring centers of the given site
+export function getNeighbors(center, centerList, voronoiObj) {
+	let neighborsCenterList = []
+	for (let centerIndex of voronoiObj.voronoi.neighbors(center.index)) {
+		neighborsCenterList.push(centerList[centerIndex])
+	  }
+	return neighborsCenterList
+}
+
 // Given a Voronoi site, return a Center object with the following initialized:
 // location, isWater, ocean, isBorder, and corners
 export function initCenters(point, voronoiIndex, voronoiObj) {
 	let center = new Center()
 	center.point = point;
+	center.index = voronoiIndex;
 	center.isWater = !isInside(true, center.point, 1000);
 	center.corners = initCorners(voronoiIndex, voronoiObj)
 

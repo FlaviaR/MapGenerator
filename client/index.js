@@ -1,4 +1,4 @@
-import {createCenters, getNeighbors, mapState} from "./utils/center_and_corner_utils"
+import {createCenters, mapState, assignCoasts} from "./utils/center_and_corner_utils"
 import { VoronoiObj } from "./voronoiObj"
 import {drawVoronoi, drawKey} from "./utils/draw_utils"
 import {relaxVoronoi} from "./utils/lloyd_relaxation_utils"
@@ -8,7 +8,7 @@ const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const width = canvas.width
 const height = canvas.height
-let num = 500
+let num = 1000
 const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
@@ -24,18 +24,18 @@ let voronoiObj = new VoronoiObj(points, width, height)
 context.clearRect(0, 0, width, height);
 
 const generateRandomMap = () => {
-    // genRandomMap(centerList, width, displayBiome, voronoiObj)
     centerList = generateMap(mapState[1], centerList, width, displayBiome, voronoiObj)
+    centerList = assignCoasts(centerList, voronoiObj)
 }
 
 const generateRadialMap = () => {
-    // curMap = genRadialMap(centerList, width, displayBiome, voronoiObj)
     centerList = generateMap(mapState[2], centerList, width, displayBiome, voronoiObj)
+    centerList = assignCoasts(centerList, voronoiObj)
 }
 
 const generateLongMap = () => {
-    // curMap = genLongMap(centerList, width, displayBiome, voronoiObj)
     centerList = generateMap(mapState[3], centerList, width, displayBiome, voronoiObj)
+    centerList = assignCoasts(centerList, voronoiObj)
 }
 
 const relaxVoronoiPolygons = () => {
@@ -59,8 +59,6 @@ extendedButton.addEventListener('click', generateLongMap, false)
 displayBiomesCheckbox.addEventListener('change', function () {
     if (this.checked) {
         displayBiome = true
-        console.log(centerList[0].biome)
-        console.log(getNeighbors(centerList[0], centerList, voronoiObj))
     } else {
         displayBiome = false
     }

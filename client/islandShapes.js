@@ -5,7 +5,7 @@ var seedrandom = require('seedrandom');
 
 // Factor should ideally be between 1.0 and 2.0
 // lower bounds lead to more constricted islands
-const ISLAND_FACTOR = 1.07
+const ISLAND_FACTOR = 0.2
 
 // Generates a randomized map -- very sparse
 export function generateRandomMap(point) {

@@ -20,7 +20,6 @@ export const generateMap = (curMap, centerList, width, displayBiome, voronoiObj)
         }
         drawVoronoiCell(i, color, voronoiObj)
     }
-    console.log(centerList)
     return centerList
 }
 
@@ -31,13 +30,16 @@ export function redrawMap(centerList, displayBiome, voronoiObj) {
         let color = ""
         let center = centerList[i]
         if (displayBiome) {
-            color = (center.ocean ? biome.colors.get("OCEAN") : biome.colors.get(center.biome))
+            if (!center.ocean) {
+                color = (center.isCoast) ? biome.colors.get("BEACH") : biome.colors.get(center.biome)
+            }
+            else color = biome.colors.get("OCEAN")
+            
         } else {
             color = (center.ocean ? biome.colors.get("OCEAN") : biome.colors.get("BEACH"))
         }
         drawVoronoiCell(i, color, voronoiObj)
     }
-    console.log(centerList)
 
 }
 

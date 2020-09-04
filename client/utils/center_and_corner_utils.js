@@ -80,7 +80,7 @@ function assignCornerElevations(cornerList) {
 }
 
 // Determine moisture for each Voronoi polygon corner
-function assignCornerMoisture(cornerList) {
+export function assignCornerMoisture(cornerList) {
 
 	let i = 0
 	for (i; i < cornerList.length; i++) {
@@ -118,6 +118,27 @@ function setOceanBorders(center) {
 	return center
 }
 
+ // A coast region is land that has an ocean neighbor
+ export function assignCoasts(centerList, voronoiObj) {
+	let i = 0
+	for (i; i < centerList.length; i++) {
+		let center = centerList[i]
+		const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
+		let j = 0
+		for (j; j < neighborIndexes.length; j++) {
+			const neighbor = centerList[neighborIndexes[j]]
+
+			if (!center.ocean && neighbor.ocean) {
+				center.isCoast = true
+				break;
+			}
+			else center.isCoast = false
+		
+		}
+	}
+    
+    return centerList;
+};
 
 function initCorners(voronoiIndex, voronoiObj) {
 	let corners = []
@@ -140,20 +161,21 @@ function initCorners(voronoiIndex, voronoiObj) {
 }
 
 // Returns a list containing the neighboring centers of the given site
-export function getNeighbors(center, centerList, voronoiObj) {
-	let neighborsCenterList = []
+export function getNeighborsIndexes(center, voronoiObj) {
+	let neighborsIndexesList = []
 	for (let centerIndex of voronoiObj.voronoi.neighbors(center.index)) {
-		neighborsCenterList.push(centerList[centerIndex])
+		neighborsIndexesList.push(centerIndex)
 	  }
-	return neighborsCenterList
+	return neighborsIndexesList
 }
 
 // Given a Voronoi site, return a Center object with the following initialized:
 // location, isWater, ocean, isBorder, and corners
-export function initCenters(point, voronoiIndex, voronoiObj) {
+export function initCenter(point, voronoiIndex, voronoiObj) {
 	let center = new Center()
 	center.point = point;
 	center.index = voronoiIndex;
+	center.neighbors = getNeighborsIndexes(center, voronoiObj)
 	// center.isWater = !isInside(true, center.point, 1000);
 	center.corners = initCorners(voronoiIndex, voronoiObj)
 
@@ -168,7 +190,7 @@ export const createCenters = (points, voronoiObj) => {
 	let centerList = []
 	let i = 0
 	for (i; i < points.length; i++) {
-		centerList.push(initCenters(points[i], i, voronoiObj))
+		centerList.push(initCenter(points[i], i, voronoiObj))
 	}
 
 	return centerList

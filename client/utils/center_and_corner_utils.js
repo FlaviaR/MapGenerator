@@ -154,7 +154,7 @@ export function initCenters(point, voronoiIndex, voronoiObj) {
 	let center = new Center()
 	center.point = point;
 	center.index = voronoiIndex;
-	center.isWater = !isInside(true, center.point, 1000);
+	// center.isWater = !isInside(true, center.point, 1000);
 	center.corners = initCorners(voronoiIndex, voronoiObj)
 
 	center = setOceanBorders(center);

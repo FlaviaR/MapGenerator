@@ -99,6 +99,7 @@ export function assignCornerMoisture(cornerList) {
 // If a given center contains a corner with the 'border' attribute,
 // then return a modified center object set as a border and ocean
 // All border faces are expected to be oceans
+// TODO: FIX
 function setOceanBorders(center) {
 	let cornerList = center.corners;
 
@@ -118,27 +119,50 @@ function setOceanBorders(center) {
 	return center
 }
 
- // A coast region is land that has an ocean neighbor
- export function assignCoasts(centerList, voronoiObj) {
+// A coast region is land that has an ocean neighbor
+function assignCoasts(center, centerList, voronoiObj) {
+
+	const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
+	let j = 0
+	for (j; j < neighborIndexes.length; j++) {
+		const neighbor = centerList[neighborIndexes[j]]
+
+		if (!center.ocean && neighbor.ocean) {
+			center.isCoast = true
+			break;
+		}
+		else center.isCoast = false
+	}
+
+	return center;
+};
+
+// TODO: Fix this - n "oceans" surround by land should be lakes
+function assignLakes(center, voronoiObj) {
+
+	const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
+	let j = 0
+	for (j; j < neighborIndexes.length; j++) {
+		const neighbor = center[neighborIndexes[j]]
+		if (center.ocean) center.isWater = true
+		if (!neighbor.ocean ) {
+			center.ocean = false
+		}
+	}
+
+	return center;
+}
+
+export function finishEcosystemAssignments(centerList, voronoiObj) {
 	let i = 0
 	for (i; i < centerList.length; i++) {
 		let center = centerList[i]
-		const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
-		let j = 0
-		for (j; j < neighborIndexes.length; j++) {
-			const neighbor = centerList[neighborIndexes[j]]
-
-			if (!center.ocean && neighbor.ocean) {
-				center.isCoast = true
-				break;
-			}
-			else center.isCoast = false
-		
-		}
+		center = assignCoasts(center, centerList, voronoiObj)
+		// center = assignLakes(center, voronoiObj)
 	}
-    
-    return centerList;
-};
+
+	return centerList;
+}
 
 function initCorners(voronoiIndex, voronoiObj) {
 	let corners = []
@@ -165,7 +189,7 @@ export function getNeighborsIndexes(center, voronoiObj) {
 	let neighborsIndexesList = []
 	for (let centerIndex of voronoiObj.voronoi.neighbors(center.index)) {
 		neighborsIndexesList.push(centerIndex)
-	  }
+	}
 	return neighborsIndexesList
 }
 

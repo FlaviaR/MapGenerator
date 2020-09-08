@@ -1,4 +1,4 @@
-import {createCenters, mapState, assignCoasts} from "./utils/center_and_corner_utils"
+import {createCenters, mapState, finishEcosystemAssignments} from "./utils/center_and_corner_utils"
 import { VoronoiObj } from "./voronoiObj"
 import {drawVoronoi, drawKey} from "./utils/draw_utils"
 import {relaxVoronoi} from "./utils/lloyd_relaxation_utils"
@@ -23,19 +23,21 @@ let voronoiObj = new VoronoiObj(points, width, height)
 
 context.clearRect(0, 0, width, height);
 
+const generateMapType = (mapState) => {
+    centerList = generateMap(mapState, centerList, width, displayBiome, voronoiObj)
+    centerList = finishEcosystemAssignments(centerList, voronoiObj)
+}
+
 const generateRandomMap = () => {
-    centerList = generateMap(mapState[1], centerList, width, displayBiome, voronoiObj)
-    centerList = assignCoasts(centerList, voronoiObj)
+    generateMapType(mapState[1], centerList, width, displayBiome, voronoiObj)
 }
 
 const generateRadialMap = () => {
-    centerList = generateMap(mapState[2], centerList, width, displayBiome, voronoiObj)
-    centerList = assignCoasts(centerList, voronoiObj)
+    generateMapType(mapState[2], centerList, width, displayBiome, voronoiObj)
 }
 
 const generateLongMap = () => {
-    centerList = generateMap(mapState[3], centerList, width, displayBiome, voronoiObj)
-    centerList = assignCoasts(centerList, voronoiObj)
+    generateMapType(mapState[3], centerList, width, displayBiome, voronoiObj)
 }
 
 const relaxVoronoiPolygons = () => {

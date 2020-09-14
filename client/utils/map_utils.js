@@ -11,11 +11,17 @@ export const generateMap = (curMap, centerList, width, displayBiome, voronoiObj)
 
     for (i; i < centerList.length; i++) {
         center = centerList[i]
-        if (isInside(curMap, center.point, width)) {
-            color = (displayBiome) ? biome.colors.get(center.biome) : biome.colors.get("BEACH")
-            centerList[i].ocean = false
-            centerList[i].isWater = false
-        } else {
+        if (isInside(curMap, center.point, width)) { // land
+            if (center.isBorder) {
+                color =  biome.colors.get("OCEAN")
+            } else {
+                color = (displayBiome) ? biome.colors.get(center.biome) : biome.colors.get("BEACH")
+                console.log(center.isBorder)
+                centerList[i].ocean = false
+                centerList[i].isWater = false
+            }
+            
+        } else { // ocean
             centerList[i].ocean = true
             centerList[i].isWater = true
             color =  biome.colors.get("OCEAN")
@@ -32,7 +38,7 @@ export function redrawMap(centerList, displayBiome, voronoiObj) {
         let color = ""
         let center = centerList[i]
         if (displayBiome) {
-            if (!center.ocean) {
+            if (!center.ocean && !center.isBorder) {
                 color = (center.isCoast) ? biome.colors.get("BEACH") : biome.colors.get(center.biome)
                 if (center.isWater) color = biome.colors.get("LAKE")
             }

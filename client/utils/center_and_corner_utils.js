@@ -168,17 +168,17 @@ function initCorners(voronoiIndex, voronoiObj) {
 	let corners = []
 	let voronoiCorners = voronoiObj.getVoronoiCorners(voronoiIndex)
 	let i = 0
-	console.log("hello")
-
+	let offset = 10
 	for (i; i < voronoiCorners.length; i++) {
 		let corner = new Corner();
 		corner.point = voronoiCorners[i];
 		corner.index = corners.length;
-		corner.isBorder = (corner.point[0] <= 0 ||
-			corner.point[0] >= width ||
-			corner.point[1] <= 0 ||
-			corner.point[1] >= width);
+		corner.isBorder = (corner.point[0] <= 0 + offset ||
+			corner.point[0] >= width - offset ||
+			corner.point[1] <= 0 + offset ||
+			corner.point[1] >= width - offset);
 		corners.push(corner)
+		if (corner.isBorder) console.log(corner.isBorder)
 	}
 	corners = assignCornerElevations(corners)
 	corners = assignCornerMoisture(corners)

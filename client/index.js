@@ -8,7 +8,7 @@ const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const width = canvas.width
 const height = canvas.height
-let num = 5
+let num = 500
 const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
@@ -47,7 +47,7 @@ const relaxVoronoiPolygons = () => {
 }
 
 function init() {
-    console.log("heyaaaa")
+    console.log("hey")
     centerList = createCenters(points, voronoiObj)
     drawVoronoi(points, voronoiObj)
     drawKey()

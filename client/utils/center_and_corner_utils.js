@@ -160,7 +160,7 @@ export function finishEcosystemAssignments(centerList, voronoiObj) {
 		center = assignCoasts(center, centerList, voronoiObj)
 		// center = assignLakes(center, voronoiObj)
 	}
-
+	
 	return centerList;
 }
 
@@ -168,6 +168,8 @@ function initCorners(voronoiIndex, voronoiObj) {
 	let corners = []
 	let voronoiCorners = voronoiObj.getVoronoiCorners(voronoiIndex)
 	let i = 0
+	console.log("hello")
+
 	for (i; i < voronoiCorners.length; i++) {
 		let corner = new Corner();
 		corner.point = voronoiCorners[i];
@@ -202,7 +204,6 @@ export function initCenter(point, voronoiIndex, voronoiObj) {
 	center.neighbors = getNeighborsIndexes(center, voronoiObj)
 	// center.isWater = !isInside(true, center.point, 1000);
 	center.corners = initCorners(voronoiIndex, voronoiObj)
-
 	center = setOceanBorders(center);
 	center = assignFaceElevationsAndMoisture(center);
 	center.biome = fetchBiome(center);
@@ -213,6 +214,7 @@ export function initCenter(point, voronoiIndex, voronoiObj) {
 export const createCenters = (points, voronoiObj) => {
 	let centerList = []
 	let i = 0
+	console.log("create center")
 	for (i; i < points.length; i++) {
 		centerList.push(initCenter(points[i], i, voronoiObj))
 	}

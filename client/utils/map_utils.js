@@ -36,11 +36,12 @@ export function drawMap(centerList, displayBiome, voronoiObj) {
         if (displayBiome) {
             if (!center.ocean && !center.isBorder) {
                 color = (center.isCoast) ? biome.colors.get("BEACH") : biome.colors.get(center.biome)
-                // if (center.isWater) color = biome.colors.get("WATER")
+                if (center.isWater) color = biome.colors.get("WATER")
             }
             else color = biome.colors.get("OCEAN")
             
         } else {
+            // Bottom line - gets rid of lakes
             // color = (center.ocean ? biome.colors.get("OCEAN") : biome.colors.get("BEACH"))
             color = (center.isWater ? biome.colors.get("WATER") : biome.colors.get("BEACH"))
             if (center.ocean) color = biome.colors.get("OCEAN")

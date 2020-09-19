@@ -2,13 +2,13 @@ import {createCenters, mapState, finishEcosystemAssignments} from "./utils/cente
 import { VoronoiObj } from "./voronoiObj"
 import {drawVoronoi, drawKey} from "./utils/draw_utils"
 import {relaxVoronoi} from "./utils/lloyd_relaxation_utils"
-import {redrawMap, generateMap} from './utils/map_utils'
+import {drawMap, generateMap} from './utils/map_utils'
 
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const width = canvas.width
 const height = canvas.height
-let num = 1000
+let num = 1500
 const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
@@ -26,6 +26,7 @@ context.clearRect(0, 0, width, height);
 const generateMapType = (mapState) => {
     centerList = generateMap(mapState, centerList, width, displayBiome, voronoiObj)
     centerList = finishEcosystemAssignments(centerList, voronoiObj)
+    drawMap(centerList, displayBiome, voronoiObj)
 }
 
 const generateRandomMap = () => {
@@ -47,9 +48,9 @@ const relaxVoronoiPolygons = () => {
 }
 
 function init() {
-    console.log("hey")
     centerList = createCenters(points, voronoiObj)
     drawVoronoi(points, voronoiObj)
+    generateRandomMap()
     drawKey()
 }
 
@@ -65,7 +66,7 @@ displayBiomesCheckbox.addEventListener('change', function () {
     } else {
         displayBiome = false
     }
-    redrawMap(centerList, displayBiome, voronoiObj)
+    drawMap(centerList, displayBiome, voronoiObj)
 });
 
 init()

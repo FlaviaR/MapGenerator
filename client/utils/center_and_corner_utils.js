@@ -2,6 +2,7 @@ import { Corner } from "../corner"
 import { Center } from "../center"
 import { isInside } from "./map_utils"
 import { getRandomNumber } from './utils'
+import { Queue } from "./queue";
 
 const canvas = document.getElementById("myCanvas");
 const width = canvas.width
@@ -34,7 +35,7 @@ function fetchBiome(center) {
 	} else if (center.isWater) {
 		if (center.elevation < 0.1) return "MARSH";
 		if (center.elevation > 0.8) return "ICE";
-		return "LAKE";
+		return "WATER";
 	} else if (center.isCoast) {
 		return "BEACH";
 	} else if (center.elevation > 0.8) {
@@ -113,54 +114,72 @@ function setOceanBorders(center) {
 			center.isBorder = true;
 		}
 
-		if (center.ocean) center.isWater = true;
 	}
-
 	return center
 }
 
 // A coast region is land that has an ocean neighbor
-function assignCoasts(center, centerList, voronoiObj) {
+function assignCoasts(centerList, voronoiObj) {
+	let i = 0
 
-	const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
-	let j = 0
-	for (j; j < neighborIndexes.length; j++) {
-		const neighbor = centerList[neighborIndexes[j]]
+	for (i; i < centerList.length; i++) {
+		let center = centerList[i]
 
-		if (!center.ocean && neighbor.ocean) {
-			center.isCoast = true
+		const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
+		let j = 0
+		for (j; j < neighborIndexes.length; j++) {
+			let neighbor = centerList[neighborIndexes[j]]
+
+			if (!center.ocean && neighbor.ocean) {
+				center.isCoast = true
+				break;
+			}
+			else center.isCoast = false
+		}
+
+	}
+	return centerList
+}
+
+// BFS for ocean
+function assignOcean(centerList, voronoiObj) {
+	let i = 0
+	let borderPolygon = null
+	for (i; i < centerList.length; i++) {
+		if (centerList[i].isBorder) {
+			borderPolygon = centerList[i]
 			break;
 		}
-		else center.isCoast = false
 	}
+	borderPolygon.color = "#ffffff"
 
-	return center;
-};
+	let visited = new Array(centerList.length)
+	let queue = new Queue()
+	visited[borderPolygon.index] = visited
+	queue.enqueue(borderPolygon)
 
-// TODO: Fix this - n "oceans" surround by land should be lakes
-function assignLakes(center, voronoiObj) {
-
-	const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
-	let j = 0
-	for (j; j < neighborIndexes.length; j++) {
-		const neighbor = center[neighborIndexes[j]]
-		if (center.ocean) center.isWater = true
-		if (!neighbor.ocean ) {
-			center.ocean = false
+	while (queue.getLength() != 0) {
+		let center = queue.dequeue()
+		const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
+		let j = 0
+		for (j; j < neighborIndexes.length; j++) {
+			let neighbor = centerList[neighborIndexes[j]]
+			if (!visited[neighbor.index] && neighbor.isWater) {
+				visited[neighbor.index] = true
+				neighbor.ocean = true
+				queue.enqueue(neighbor)
+			}
 		}
 	}
-
-	return center;
+	return centerList
 }
 
 export function finishEcosystemAssignments(centerList, voronoiObj) {
 	let i = 0
-	for (i; i < centerList.length; i++) {
-		let center = centerList[i]
-		center = assignCoasts(center, centerList, voronoiObj)
-		// center = assignLakes(center, voronoiObj)
-	}
-	
+
+	centerList = assignOcean(centerList, voronoiObj)
+	centerList = assignCoasts(centerList, voronoiObj)
+
 	return centerList;
 }
 
@@ -178,7 +197,6 @@ function initCorners(voronoiIndex, voronoiObj) {
 			corner.point[1] <= 0 + offset ||
 			corner.point[1] >= width - offset);
 		corners.push(corner)
-		if (corner.isBorder) console.log(corner.isBorder)
 	}
 	corners = assignCornerElevations(corners)
 	corners = assignCornerMoisture(corners)
@@ -214,7 +232,6 @@ export function initCenter(point, voronoiIndex, voronoiObj) {
 export const createCenters = (points, voronoiObj) => {
 	let centerList = []
 	let i = 0
-	console.log("create center")
 	for (i; i < points.length; i++) {
 		centerList.push(initCenter(points[i], i, voronoiObj))
 	}

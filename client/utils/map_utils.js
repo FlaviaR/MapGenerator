@@ -4,34 +4,30 @@ import {drawVoronoiCell} from "./draw_utils"
 import {generateRandomMap, generateRadialMap, generateLongMap} from '../islandShapes'
 
 export const generateMap = (curMap, centerList, width, displayBiome, voronoiObj) => {
+    console.log("generate map")
     let i = 0
-    let center = null
-    let color = ""
-    const biome = new Biome()
-
     for (i; i < centerList.length; i++) {
-        center = centerList[i]
-        if (isInside(curMap, center.point, width)) { // land
-            if (center.isBorder) {
-                color =  biome.colors.get("OCEAN")
-            } else {
-                color = (displayBiome) ? biome.colors.get(center.biome) : biome.colors.get("BEACH")
-                console.log(center.isBorder)
+        let center = centerList[i]
+        if (isInside(curMap, center.point, width) && !center.isBorder) { // land
+
                 centerList[i].ocean = false
                 centerList[i].isWater = false
-            }
-            
-        } else { // ocean
-            centerList[i].ocean = true
+    
+        } else { // water
+            centerList[i].ocean = false
             centerList[i].isWater = true
-            color =  biome.colors.get("OCEAN")
+            // centerList[i].biome = "WATER"
         }
-        drawVoronoiCell(i, color, voronoiObj)
     }
     return centerList
 }
 
-export function redrawMap(centerList, displayBiome, voronoiObj) {
+export function drawMap(centerList, displayBiome, voronoiObj) {
+    let j = 0
+    for (j; j < centerList.length; j++) {
+        let center = centerList[j]
+        if (center.ocean) console.log("ocean")
+    }
     let i = 0
     const biome = new Biome()
     for (i; i < centerList.length; i++) {
@@ -40,12 +36,16 @@ export function redrawMap(centerList, displayBiome, voronoiObj) {
         if (displayBiome) {
             if (!center.ocean && !center.isBorder) {
                 color = (center.isCoast) ? biome.colors.get("BEACH") : biome.colors.get(center.biome)
-                if (center.isWater) color = biome.colors.get("LAKE")
+                // if (center.isWater) color = biome.colors.get("WATER")
             }
             else color = biome.colors.get("OCEAN")
             
         } else {
-            color = (center.ocean ? biome.colors.get("OCEAN") : biome.colors.get("BEACH"))
+            // color = (center.ocean ? biome.colors.get("OCEAN") : biome.colors.get("BEACH"))
+            color = (center.isWater ? biome.colors.get("WATER") : biome.colors.get("BEACH"))
+            if (center.ocean) color = biome.colors.get("OCEAN")
+            if (center.isBorder) color = biome.colors.get("OCEAN")
+            if(center.color) color = "#ffffff"
         }
         drawVoronoiCell(i, color, voronoiObj)
     }

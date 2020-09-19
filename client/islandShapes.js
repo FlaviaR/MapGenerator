@@ -11,7 +11,7 @@ const ISLAND_FACTOR = 0.2
 export function generateRandomMap(point) {
     // let num = Math.floor(seedrandom(point[0] + point[1] + 0.5)() * 100) 
     let num = getRandomNumber(100);
-    if (num % 7 == 0) return false;
+    if (num % 3 == 0) return false;
     else return true;
 }
 
@@ -35,6 +35,7 @@ export function generateRadialMap(point) {
         r1 = r2 = 0.2
     }
     let isInside = (length < r1 || (length > r1 * ISLAND_FACTOR && length < r2))
+    
     return isInside
 }
 

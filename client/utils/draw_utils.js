@@ -50,7 +50,7 @@ export const drawKey = () => {
     drawRectangle([110, 20], ctx, biome.colors.get("BEACH"), "BEACH")
     drawRectangle([200, 20], ctx, biome.colors.get("MARSH"), "MARSH")
     drawRectangle([300, 20], ctx, biome.colors.get("ICE"), "ICE")
-    drawRectangle([370, 20], ctx, biome.colors.get("LAKE"), "LAKE")
+    drawRectangle([370, 20], ctx, biome.colors.get("WATER"), "WATER")
     drawRectangle([450, 20], ctx, biome.colors.get("SNOW"), "SNOW")
     drawRectangle([540, 20], ctx, biome.colors.get("TUNDRA"), "TUNDRA")
     drawRectangle([640, 20], ctx, biome.colors.get("BARE"), "BARE")

@@ -5,7 +5,7 @@ export class Biome {
         this.colors.set("BEACH", "#999966")
         this.colors.set("MARSH", "#65caad")
         this.colors.set("ICE", "#c4eef6")
-        this.colors.set("LAKE", "#63bdce")
+        this.colors.set("WATER", "#63bdce")
         this.colors.set("SNOW", "#e3f1f3")
         this.colors.set("TUNDRA", "#c1a088")
         this.colors.set("BARE", "#857061")

@@ -151,7 +151,6 @@ function assignOcean(centerList, voronoiObj) {
 			break;
 		}
 	}
-	borderPolygon.color = "#ffffff"
 
 	let visited = new Array(centerList.length)
 	let queue = new Queue()

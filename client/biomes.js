@@ -1,11 +1,11 @@
 export class Biome {
     constructor() {
         this.colors = new Map()
-        this.colors.set("OCEAN", "#0086b3")
+        this.colors.set("OCEAN", "#17437E")
         this.colors.set("BEACH", "#999966")
         this.colors.set("MARSH", "#65caad")
         this.colors.set("ICE", "#c4eef6")
-        this.colors.set("WATER", "#63bdce")
+        this.colors.set("WATER", "#2C6BC1")
         this.colors.set("SNOW", "#e3f1f3")
         this.colors.set("TUNDRA", "#c1a088")
         this.colors.set("BARE", "#857061")

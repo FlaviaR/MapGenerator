@@ -8,8 +8,6 @@ const canvas = document.getElementById("myCanvas");
 const width = canvas.width
 export const mapState = ["basic", "random", "radial", "long"]
 
-//TODO - assign temperatures / assign coast
-
 // Set the moisture and elevation of the given center to be the average elevation and moisture of its corners
 function assignFaceElevationsAndMoisture(center) {
 	let corners = center.corners;
@@ -100,7 +98,6 @@ export function assignCornerMoisture(cornerList) {
 // If a given center contains a corner with the 'border' attribute,
 // then return a modified center object set as a border and ocean
 // All border faces are expected to be oceans
-// TODO: FIX
 function setOceanBorders(center) {
 	let cornerList = center.corners;
 
@@ -113,7 +110,6 @@ function setOceanBorders(center) {
 			center.ocean = true;
 			center.isBorder = true;
 		}
-
 	}
 	return center
 }
@@ -136,7 +132,6 @@ function assignCoasts(centerList, voronoiObj) {
 			}
 			else center.isCoast = false
 		}
-
 	}
 	return centerList
 }

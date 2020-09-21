@@ -1,5 +1,4 @@
 import {createCenters} from "./center_and_corner_utils"
-import {drawVoronoi} from "./draw_utils"
 
 /*
     Find the centroid of a Voronoi region described by `vertices`, and return an
@@ -43,8 +42,7 @@ function applyLloydRelaxation(cellVertices) {
 export const relaxVoronoi = (points, voronoiObj) => {
     points = relaxPoints(points, voronoiObj.voronoi)
     voronoiObj.updateVoronoi(points)
-    let centerList = createCenters(points, voronoiObj)
-    drawVoronoi(points, voronoiObj)
+	let centerList = createCenters(points, voronoiObj)
 
     return [points, centerList]
 }

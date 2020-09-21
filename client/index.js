@@ -20,10 +20,12 @@ let displayBiome = false
 let points = Array.from({ length: num }, () => [Math.random() * width, Math.random() * height]);
 let centerList = []
 let voronoiObj = new VoronoiObj(points, width, height)
+let curMap = mapState[1]
 
 context.clearRect(0, 0, width, height);
 
 const generateMapType = (mapState) => {
+    curMap = mapState
     centerList = generateMap(mapState, centerList, width, displayBiome, voronoiObj)
     centerList = finishEcosystemAssignments(centerList, voronoiObj)
     drawMap(centerList, displayBiome, voronoiObj)
@@ -45,6 +47,8 @@ const relaxVoronoiPolygons = () => {
     let ret = relaxVoronoi(points, voronoiObj)
     points = ret[0]
     centerList = ret[1]
+
+    generateMapType(curMap)
 }
 
 function init() {

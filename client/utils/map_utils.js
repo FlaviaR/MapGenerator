@@ -39,7 +39,6 @@ export function drawMap(centerList, displayBiome, voronoiObj) {
 
         drawVoronoiCell(i, color, voronoiObj)
     }
-
 }
 
 // CHeck to see whether a given point is inside land or in water

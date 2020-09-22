@@ -58,6 +58,25 @@ function fetchBiome(center) {
 	}
 }
 
+function updateCornerMoisture(cornerList, amount) {
+	let corners = []
+
+	let i = 0
+	for (i; i < cornerList.length; i++) {
+		let corner = cornerList[i]
+
+		// elevations are supposed to be between 0.0 and 1.0 -
+		corner.elevation = corner.elevation()
+	}
+	corners.push(corner)
+
+	return corners
+}
+
+function updateCornerElevation(cornerList, amount) {
+
+}
+
 // Determine elevation for each Voronoi polygon corner
 function assignCornerElevations(cornerList) {
 	let corners = []
@@ -85,7 +104,7 @@ export function assignCornerMoisture(cornerList) {
 	for (i; i < cornerList.length; i++) {
 		let corner = cornerList[i]
 
-		if (corner.ocean) {
+		if (corner.isWater) {
 			corner.moisture = 1.0;
 		} else {
 			corner.moisture = getRandomNumber(10) / 10;
@@ -168,9 +187,8 @@ function assignOcean(centerList, voronoiObj) {
 	return centerList
 }
 
-export function finishEcosystemAssignments(centerList, voronoiObj) {
-	let i = 0
-
+export function finishEcosystemAssignments(centerList, voronoiObj, createNewMap) {
+	
 	centerList = assignOcean(centerList, voronoiObj)
 	centerList = assignCoasts(centerList, voronoiObj)
 
@@ -209,25 +227,31 @@ export function getNeighborsIndexes(center, voronoiObj) {
 
 // Given a Voronoi site, return a Center object with the following initialized:
 // location, isWater, ocean, isBorder, and corners
-export function initCenter(point, voronoiIndex, voronoiObj) {
+export function initCenter(point, voronoiIndex, voronoiObj, oldCenter) {
 	let center = new Center()
 	center.point = point;
 	center.index = voronoiIndex;
 	center.neighbors = getNeighborsIndexes(center, voronoiObj)
-	// center.isWater = !isInside(true, center.point, 1000);
-	center.corners = initCorners(voronoiIndex, voronoiObj)
+	center.corners = (oldCenter == null) ? initCorners(voronoiIndex, voronoiObj) : oldCenter.corners
 	center = setOceanBorders(center);
-	center = assignFaceElevationsAndMoisture(center);
-	center.biome = fetchBiome(center);
+
+	if (oldCenter != null) {
+		center.elevation = oldCenter.elevation
+		center.moisture = oldCenter.moisture
+		center.isWater = oldCenter.isWater
+		center.ocean = oldCenter.ocean
+	} else center = assignFaceElevationsAndMoisture(center)
+	center.biome = (oldCenter == null) ? fetchBiome(center) : oldCenter.biome;
 
 	return center;
 }
 
-export const createCenters = (points, voronoiObj) => {
+export const createCenters = (points, voronoiObj, oldCenterList = null) => {
 	let centerList = []
 	let i = 0
 	for (i; i < points.length; i++) {
-		centerList.push(initCenter(points[i], i, voronoiObj))
+		let oldCenter = (oldCenterList == null) ? null : oldCenterList[i]
+		centerList.push(initCenter(points[i], i, voronoiObj, oldCenter))
 	}
 
 	return centerList

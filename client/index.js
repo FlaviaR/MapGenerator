@@ -1,8 +1,8 @@
-import {createCenters, mapState, finishEcosystemAssignments} from "./utils/center_and_corner_utils"
+import { createCenters, mapState, finishEcosystemAssignments } from "./utils/center_and_corner_utils"
 import { VoronoiObj } from "./voronoiObj"
-import {drawVoronoi, drawKey} from "./utils/draw_utils"
-import {relaxVoronoi} from "./utils/lloyd_relaxation_utils"
-import {drawMap, generateMap} from './utils/map_utils'
+import { drawVoronoi, drawKey } from "./utils/draw_utils"
+import { relaxVoronoi } from "./utils/lloyd_relaxation_utils"
+import { drawMap, generateMap } from './utils/map_utils'
 
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
@@ -14,6 +14,7 @@ const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
 const extendedButton = document.getElementById("longMap");
 const displayBiomesCheckbox = document.getElementById("displayBiomes");
+const biomeSlider = document.getElementById("biomeSlider")
 
 let displayBiome = false
 
@@ -24,31 +25,32 @@ let curMap = mapState[1]
 
 context.clearRect(0, 0, width, height);
 
-const generateMapType = (mapState) => {
+const generateMapType = (mapState, createNewMap) => {
     curMap = mapState
-    centerList = generateMap(mapState, centerList, width, displayBiome, voronoiObj)
-    centerList = finishEcosystemAssignments(centerList, voronoiObj)
+    centerList = generateMap(mapState, centerList, width, createNewMap)
+    centerList = finishEcosystemAssignments(centerList, voronoiObj, createNewMap)
+
     drawMap(centerList, displayBiome, voronoiObj)
 }
 
 const generateRandomMap = () => {
-    generateMapType(mapState[1], centerList, width, displayBiome, voronoiObj)
+    generateMapType(mapState[1])
 }
 
 const generateRadialMap = () => {
-    generateMapType(mapState[2], centerList, width, displayBiome, voronoiObj)
+    generateMapType(mapState[2])
 }
 
 const generateLongMap = () => {
-    generateMapType(mapState[3], centerList, width, displayBiome, voronoiObj)
+    generateMapType(mapState[3])
 }
 
 const relaxVoronoiPolygons = () => {
-    let ret = relaxVoronoi(points, voronoiObj)
+    let ret = relaxVoronoi(points, voronoiObj, centerList)
     points = ret[0]
     centerList = ret[1]
 
-    generateMapType(curMap)
+    generateMapType(curMap, false)
 }
 
 function init() {
@@ -72,6 +74,12 @@ displayBiomesCheckbox.addEventListener('change', function () {
     }
     drawMap(centerList, displayBiome, voronoiObj)
 });
+
+
+// Update the current slider value (each time you drag the slider handle)
+biomeSlider.oninput = function () {
+    console.log(this.value);
+}
 
 init()
 

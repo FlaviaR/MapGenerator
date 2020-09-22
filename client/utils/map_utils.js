@@ -3,19 +3,23 @@ import { Biome } from "../biomes"
 import { drawVoronoiCell } from "./draw_utils"
 import { generateRandomMap, generateRadialMap, generateLongMap } from '../islandShapes'
 
-export const generateMap = (curMap, centerList, width, displayBiome, voronoiObj) => {
-    let i = 0
-    for (i; i < centerList.length; i++) {
-        let center = centerList[i]
-        if (isInside(curMap, center.point, width) && !center.isBorder) { // land
-            centerList[i].ocean = false
-            centerList[i].isWater = false
-        } else { // water
-            centerList[i].ocean = false
-            centerList[i].isWater = true
-            // centerList[i].biome = "WATER"
+export const generateMap = (curMap, centerList, width, createNewMap=true) => {
+    // Do not recompute "isInside"" if only applying lloyd relaxation or updating biomes
+    if (createNewMap) {
+        let i = 0
+        for (i; i < centerList.length; i++) {
+            let center = centerList[i]
+            if (isInside(curMap, center.point, width) && !center.isBorder) { // land
+                centerList[i].ocean = false
+                centerList[i].isWater = false
+            } else { // water
+                centerList[i].ocean = false
+                centerList[i].isWater = true
+                // centerList[i].biome = "WATER"
+            }
         }
     }
+
     return centerList
 }
 

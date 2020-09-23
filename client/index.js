@@ -13,6 +13,7 @@ const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
 const extendedButton = document.getElementById("longMap");
+const undoButton = document.getElementById("undoButton");
 const displayBiomesCheckbox = document.getElementById("displayBiomes");
 const biomeSlider = document.getElementById("biomeSlider")
 
@@ -22,7 +23,7 @@ let points = Array.from({ length: num }, () => [Math.random() * width, Math.rand
 let centerList = []
 let voronoiObj = new VoronoiObj(points, width, height)
 let curMap = mapState[1]
-
+let previousState = []
 context.clearRect(0, 0, width, height);
 
 const generateMapType = (mapState, createNewMap) => {
@@ -45,16 +46,29 @@ const generateLongMap = () => {
     generateMapType(mapState[3])
 }
 
-const relaxVoronoiPolygons = () => {
-    let ret = relaxVoronoi(points, voronoiObj, centerList)
-    points = ret[0]
-    centerList = ret[1]
+const updateCenterListAndPoints = (newCenterList, newPoints) => {
+    centerList = newCenterList
+    points = newPoints
+    voronoiObj.updateVoronoi(points)
+}
 
+const relaxVoronoiPolygons = () => {
+    let relaxed = relaxVoronoi(points, voronoiObj, centerList)
+    updateCenterListAndPoints(relaxed.centerList, relaxed.points)
+    previousState.push({ centerList, points })
     generateMapType(curMap, false)
+}
+
+const undoRelaxation = () => {
+    if (previousState.length > 1) previousState.pop() // remove the most recently added state
+    let prevState = previousState[previousState.length - 1]
+    updateCenterListAndPoints(prevState.centerList, prevState.points)
+    drawMap(centerList, displayBiome, voronoiObj)
 }
 
 function init() {
     centerList = createCenters(points, voronoiObj)
+    previousState.push({ centerList, points })
     drawVoronoi(points, voronoiObj)
     generateRandomMap()
     drawKey()
@@ -65,6 +79,7 @@ lloydButton.addEventListener('click', relaxVoronoiPolygons, false)
 randomButton.addEventListener('click', generateRandomMap)
 radialButton.addEventListener('click', generateRadialMap, false)
 extendedButton.addEventListener('click', generateLongMap, false)
+undoButton.addEventListener('click', undoRelaxation, false)
 
 displayBiomesCheckbox.addEventListener('change', function () {
     if (this.checked) {

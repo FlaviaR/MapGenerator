@@ -41,10 +41,9 @@ function applyLloydRelaxation(cellVertices) {
 
 export const relaxVoronoi = (points, voronoiObj, oldCenterList) => {
     points = relaxPoints(points, voronoiObj.voronoi)
-    voronoiObj.updateVoronoi(points)
 	let centerList = createCenters(points, voronoiObj, oldCenterList) 
 
-    return [points, centerList]
+    return {points, centerList}
 }
 
 function relaxPoints(points, voronoi) {

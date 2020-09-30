@@ -117,20 +117,26 @@ export function assignCornerMoisture(cornerList) {
 // If a given center contains a corner with the 'border' attribute,
 // then return a modified center object set as a border and ocean
 // All border faces are expected to be oceans
-function setOceanBorders(center) {
-	let cornerList = center.corners;
-
+function setOceanBorders(centerList) {
 	let i = 0
-	for (i; i < cornerList.length; i++) {
-		let corner = cornerList[i]
+	for (i = 0; i < centerList.length; i++) {
+		let center = centerList[i]
+		let cornerList = center.corners;
 
-		if (corner.isBorder) {
-			center.isWater = true;
-			center.ocean = true;
-			center.isBorder = true;
+		let j = 0
+		for (j; j < cornerList.length; j++) {
+			let corner = cornerList[j]
+
+			if (corner.isBorder) {
+				center.isWater = true;
+				center.ocean = true;
+				center.isBorder = true;
+				center.biome = "OCEAN"
+			}
 		}
 	}
-	return center
+
+	return centerList
 }
 
 // A coast region is land that has an ocean neighbor
@@ -188,7 +194,7 @@ function assignOcean(centerList, voronoiObj) {
 }
 
 export function finishEcosystemAssignments(centerList, voronoiObj, createNewMap) {
-	
+	centerList = setOceanBorders(centerList, voronoiObj);
 	centerList = assignOcean(centerList, voronoiObj)
 	centerList = assignCoasts(centerList, voronoiObj)
 
@@ -233,7 +239,6 @@ export function initCenter(point, voronoiIndex, voronoiObj, oldCenter) {
 	center.index = voronoiIndex;
 	center.neighbors = getNeighborsIndexes(center, voronoiObj)
 	center.corners = (oldCenter == null) ? initCorners(voronoiIndex, voronoiObj) : oldCenter.corners
-	center = setOceanBorders(center);
 
 	if (oldCenter != null) {
 		center.elevation = oldCenter.elevation

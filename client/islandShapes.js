@@ -35,7 +35,6 @@ export function generateRadialMap(point) {
         r1 = r2 = 0.2
     }
     let isInside = (length < r1 || (length > r1 * ISLAND_FACTOR && length < r2))
-    
     return isInside
 }
 

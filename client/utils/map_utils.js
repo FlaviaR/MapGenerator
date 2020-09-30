@@ -15,7 +15,6 @@ export const generateMap = (curMap, centerList, width, createNewMap=true) => {
             } else { // water
                 centerList[i].ocean = false
                 centerList[i].isWater = true
-                // centerList[i].biome = "WATER"
             }
         }
     }
@@ -41,7 +40,7 @@ export function drawMap(centerList, displayBiome, voronoiObj) {
         }
         if (center.ocean || center.isBorder) color = biome.colors.get("OCEAN")
 
-        drawVoronoiCell(i, color, voronoiObj)
+        drawVoronoiCell(i, color, voronoiObj, centerList)
     }
 }
 

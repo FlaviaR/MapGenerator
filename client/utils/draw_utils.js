@@ -1,5 +1,6 @@
-import {random_hex_color_code} from "./utils"
+import { random_hex_color_code } from "./utils"
 import { Biome } from "../biomes";
+import { getNeighborsIndexes } from "./center_and_corner_utils"
 
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
@@ -12,34 +13,84 @@ function drawPoints(index, points) {
     context.fillRect(point[0], point[1], 3, 3)
 }
 
-export function drawVoronoiCell(index, cellColor, voronoiObj) {
+export function drawVoronoiCell(index, cellColor, voronoiObj, centerList) {
     context.lineWidth = 0;
     context.fillStyle = cellColor;
 
     context.beginPath();
 
     voronoiObj.voronoi.renderCell(index, context)
-
     context.fill();
-    context.stroke();
 
     context.closePath()
+
+    let center = centerList[index]
+    if (center.isCoast) {
+        let neighborsIndexes = getNeighborsIndexes(center, voronoiObj)
+        let i = 0
+        for (i; i < neighborsIndexes.length; i++) {
+            let neighborIndex = neighborsIndexes[i]
+            let neighbor = centerList[neighborIndex]
+            if (neighbor.ocean) {
+                let centerVertices = voronoiObj.voronoi.cellPolygon(center.index)
+                let neighborVertices = voronoiObj.voronoi.cellPolygon(neighbor.index)
+
+                let maxLen = Math.max(centerVertices.length, neighborVertices.length)
+                let biggerArray = (maxLen == centerVertices.length) ? centerVertices : neighborVertices
+                let smallerArray = (biggerArray == centerVertices) ? neighborVertices : centerVertices
+                
+                let j = 0
+                let startPoint = null
+                let endPoint = null
+                for (j; j < biggerArray.length; j++) {
+                    let k = 0
+                    for (k; k < smallerArray.length; k++) {
+            
+                        if (biggerArray[j][0] === smallerArray[k][0] && 
+                            biggerArray[j][1] === smallerArray[k][1]) {
+                            if (startPoint == null) {
+                                startPoint = biggerArray[j]
+                                break
+                            }
+                            // The polygon closes on its original point
+                            // Prevent the end point from being the polygon's origin point
+                            if (biggerArray[j][0] != startPoint[0] && 
+                                biggerArray[j][1] != startPoint[1]) {
+                                endPoint = biggerArray[j]
+                                break
+                            }
+                        }
+                    }
+                }
+                context.beginPath();
+
+                context.lineWidth = 3;
+                context.moveTo(startPoint[0], startPoint[1])
+                context.lineTo(endPoint[0], endPoint[1])
+                context.stroke();
+    
+                context.closePath()
+
+            }
+        }
+    }
+
 }
 
-export function drawVoronoi(points, voronoiObj) {
-    let i = 0
-    for (i; i < points.length; i++) {
-        drawVoronoiCell(i, random_hex_color_code(), voronoiObj)
-        drawPoints(i, points)
-    }
-}
+// export function drawVoronoi(points, voronoiObj, centerList) {
+//     let i = 0
+//     for (i; i < points.length; i++) {
+//         drawVoronoiCell(i, random_hex_color_code(), voronoiObj, centerList)
+//         drawPoints(i, points)
+//     }
+// }
 
 
 const drawRectangle = (p, ctx, color, text) => {
     ctx.fillStyle = color;
     ctx.fillRect(p[0], p[1], 20, 10);
     ctx.font = "15px Arial";
-    ctx.fillStyle = "black";
+    ctx.fillStyle = "white";
     ctx.fillText(text, p[0] + 30, p[1] + 10);
 }
 

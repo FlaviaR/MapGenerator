@@ -8,7 +8,7 @@ const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const width = canvas.width
 const height = canvas.height
-let num = 2000
+let num = 1500
 const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
@@ -30,7 +30,6 @@ const generateMapType = (mapState, createNewMap) => {
     curMap = mapState
     centerList = generateMap(mapState, centerList, width, createNewMap)
     centerList = finishEcosystemAssignments(centerList, voronoiObj, createNewMap)
-
     drawMap(centerList, displayBiome, voronoiObj)
 }
 
@@ -69,7 +68,6 @@ const undoRelaxation = () => {
 function init() {
     centerList = createCenters(points, voronoiObj)
     previousState.push({ centerList, points })
-    drawVoronoi(points, voronoiObj)
     generateRandomMap()
     drawKey()
 }

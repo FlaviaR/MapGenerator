@@ -193,7 +193,7 @@ function assignOcean(centerList, voronoiObj) {
 	return centerList
 }
 
-export function finishEcosystemAssignments(centerList, voronoiObj, createNewMap) {
+export function finishEcosystemAssignments(centerList, voronoiObj) {
 	centerList = setOceanBorders(centerList, voronoiObj);
 	centerList = assignOcean(centerList, voronoiObj)
 	centerList = assignCoasts(centerList, voronoiObj)
@@ -201,7 +201,7 @@ export function finishEcosystemAssignments(centerList, voronoiObj, createNewMap)
 	return centerList;
 }
 
-function initCorners(voronoiIndex, voronoiObj) {
+function setCornerBorders(voronoiIndex, voronoiObj) {
 	let corners = []
 	let voronoiCorners = voronoiObj.getVoronoiCorners(voronoiIndex)
 	let i = 0
@@ -216,6 +216,11 @@ function initCorners(voronoiIndex, voronoiObj) {
 			corner.point[1] >= width - offset);
 		corners.push(corner)
 	}
+	return corners
+}
+
+export function initCorners(voronoiIndex, voronoiObj) {
+	let corners = setCornerBorders(voronoiIndex, voronoiObj)
 	corners = assignCornerElevations(corners)
 	corners = assignCornerMoisture(corners)
 

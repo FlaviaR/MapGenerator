@@ -13,18 +13,34 @@ function drawPoints(index, points) {
     context.fillRect(point[0], point[1], 3, 3)
 }
 
+
 export function drawVoronoiCell(index, cellColor, voronoiObj, centerList) {
-    context.lineWidth = 0;
-    context.fillStyle = cellColor;
+    let center = centerList[index]
 
     context.beginPath();
+    const grd = context.createLinearGradient(0, 0, 400, 0);
+    grd.addColorStop(0, cellColor);
+    grd.addColorStop(1, "green");
+    context.fillStyle = cellColor;
+
+    // ocean or lake
+    if (center.ocean || (!center.ocean && center.isWater)) {
+        context.fillStyle = cellColor;
+    }
 
     voronoiObj.voronoi.renderCell(index, context)
-    context.fill();
 
+    if (!center.ocean) {
+        context.lineWidth = 1;
+        context.strokeStyle = "grey";
+
+        context.stroke()
+    }
+
+    context.fill();
     context.closePath()
 
-    let center = centerList[index]
+
     if (center.isCoast) {
         let neighborsIndexes = getNeighborsIndexes(center, voronoiObj)
         let i = 0
@@ -38,15 +54,15 @@ export function drawVoronoiCell(index, cellColor, voronoiObj, centerList) {
                 let maxLen = Math.max(centerVertices.length, neighborVertices.length)
                 let biggerArray = (maxLen == centerVertices.length) ? centerVertices : neighborVertices
                 let smallerArray = (biggerArray == centerVertices) ? neighborVertices : centerVertices
-                
+
                 let j = 0
                 let startPoint = null
                 let endPoint = null
                 for (j; j < biggerArray.length; j++) {
                     let k = 0
                     for (k; k < smallerArray.length; k++) {
-            
-                        if (biggerArray[j][0] === smallerArray[k][0] && 
+
+                        if (biggerArray[j][0] === smallerArray[k][0] &&
                             biggerArray[j][1] === smallerArray[k][1]) {
                             if (startPoint == null) {
                                 startPoint = biggerArray[j]
@@ -54,7 +70,7 @@ export function drawVoronoiCell(index, cellColor, voronoiObj, centerList) {
                             }
                             // The polygon closes on its original point
                             // Prevent the end point from being the polygon's origin point
-                            if (biggerArray[j][0] != startPoint[0] && 
+                            if (biggerArray[j][0] != startPoint[0] &&
                                 biggerArray[j][1] != startPoint[1]) {
                                 endPoint = biggerArray[j]
                                 break
@@ -63,12 +79,13 @@ export function drawVoronoiCell(index, cellColor, voronoiObj, centerList) {
                     }
                 }
                 context.beginPath();
+                context.strokeStyle = "black";
 
-                context.lineWidth = 3;
+                context.lineWidth = 4;
                 context.moveTo(startPoint[0], startPoint[1])
                 context.lineTo(endPoint[0], endPoint[1])
                 context.stroke();
-    
+
                 context.closePath()
 
             }
@@ -76,14 +93,6 @@ export function drawVoronoiCell(index, cellColor, voronoiObj, centerList) {
     }
 
 }
-
-// export function drawVoronoi(points, voronoiObj, centerList) {
-//     let i = 0
-//     for (i; i < points.length; i++) {
-//         drawVoronoiCell(i, random_hex_color_code(), voronoiObj, centerList)
-//         drawPoints(i, points)
-//     }
-// }
 
 
 const drawRectangle = (p, ctx, color, text) => {

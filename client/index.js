@@ -1,4 +1,4 @@
-import { createCenters, mapState, finishEcosystemAssignments } from "./utils/center_and_corner_utils"
+import { createCenters, mapState, finishEcosystemAssignments, initCorners } from "./utils/center_and_corner_utils"
 import { VoronoiObj } from "./voronoiObj"
 import { drawVoronoi, drawKey } from "./utils/draw_utils"
 import { relaxVoronoi } from "./utils/lloyd_relaxation_utils"
@@ -8,7 +8,7 @@ const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const width = canvas.width
 const height = canvas.height
-let num = 1500
+let num = 1000
 const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
@@ -29,7 +29,7 @@ context.clearRect(0, 0, width, height);
 const generateMapType = (mapState, createNewMap) => {
     curMap = mapState
     centerList = generateMap(mapState, centerList, width, createNewMap)
-    centerList = finishEcosystemAssignments(centerList, voronoiObj, createNewMap)
+    centerList = finishEcosystemAssignments(centerList, voronoiObj)
     drawMap(centerList, displayBiome, voronoiObj)
 }
 
@@ -53,6 +53,15 @@ const updateCenterListAndPoints = (newCenterList, newPoints) => {
 
 const relaxVoronoiPolygons = () => {
     let relaxed = relaxVoronoi(points, voronoiObj, centerList)
+
+    // If the relaxation expands a site outside of the map,
+    // be sure to treat that site as a border
+    let i = 0
+    for (i; i < relaxed.centerList.length; i++) {
+        let center = relaxed.centerList[i]
+        center.corners = initCorners(i, voronoiObj)
+    }
+
     updateCenterListAndPoints(relaxed.centerList, relaxed.points)
     previousState.push({ centerList, points })
     generateMapType(curMap, false)
@@ -71,7 +80,6 @@ function init() {
     generateRandomMap()
     drawKey()
 }
-
 
 lloydButton.addEventListener('click', relaxVoronoiPolygons, false)
 randomButton.addEventListener('click', generateRandomMap)

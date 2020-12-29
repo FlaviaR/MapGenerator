@@ -88,24 +88,31 @@ function edgeHasBeenVisited(A, B, visitedCorners) {
     return false
 }
 
+function distanceBetweenPoints(p1, p2) {
+    return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2))
+}
+
 function addNoiseToEdge(A, B) {
     let noisyEdge = []
 
     // X = (1 - t)A + tB 
-    const num = 2
+    const num = 5
     let i = 1
     noisyEdge.push(A)
     for (i; i < num + 1; i++) {
-        let t = 0.5*i
+        let t = 0.2*i
         let pointA = [(1- t) * A[0], (1 - t) * A[1]]
         let pointB = [t*B[0], t*B[1]]
         let X = [pointA[0] + pointB[0], pointA[1] + pointB[1]]
 
-        let randX = getRandomNumber(100)/10 
-        let randY = getRandomNumber(100)/10
+        let randX = getRandomNumber(100)/10 * 2
+        let randY = getRandomNumber(100)/10 * 2
 
-        let modPoint = [X[0] + randX, X[1] + randY]
-        // let modPoint = [X[0], X[1]]
+        let lineLength = distanceBetweenPoints(A, B)
+        let pointDistance = distanceBetweenPoints(X, A)
+        let ratio = pointDistance/lineLength
+
+        let modPoint = (ratio >= 0.3 && ratio <= 0.7) ? [X[0] + randX, X[1] + randY] : X
 
         modPoint = cullPoint(modPoint)
         noisyEdge.push(modPoint)

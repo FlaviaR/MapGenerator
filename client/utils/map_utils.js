@@ -1,6 +1,6 @@
 import { mapState } from './center_and_corner_utils'
 import { Biome } from "../biomes"
-import { drawVoronoiCell } from "./draw_utils"
+import { drawVoronoiCell, drawNoisyCell } from "./draw_utils"
 import { generateRandomMap, generateRadialMap, generateLongMap } from '../islandShapes'
 
 export const generateMap = (curMap, centerList, width, createNewMap = true) => {
@@ -28,6 +28,26 @@ export const generateMap = (curMap, centerList, width, createNewMap = true) => {
     return centerList
 }
 
+export function drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj) {
+    let i = 0
+    const biome = new Biome()
+    for (i; i < noisyPolygonList.length; i++) {
+        let color = ""
+        let center = noisyPolygonList[i].center
+
+        if (displayBiome) {
+            color = (center.isCoast) ? biome.colors.get("BEACH") : biome.colors.get(center.biome)
+            if (center.isWater) color = biome.colors.get("WATER")
+
+        } else {
+            // Bottom line - gets rid of lakes
+            // color = (center.ocean ? biome.colors.get("OCEAN") : biome.colors.get("BEACH"))
+            color = (center.isWater ? biome.colors.get("WATER") : biome.colors.get("BEACH"))
+        }
+        if (center.ocean || center.isBorder) color = biome.colors.get("OCEAN")
+        drawNoisyCell(i, color, voronoiObj, noisyPolygonList)
+    }
+}
 
 export function drawMap(centerList, displayBiome, voronoiObj) {
     let i = 0
@@ -46,6 +66,7 @@ export function drawMap(centerList, displayBiome, voronoiObj) {
             color = (center.isWater ? biome.colors.get("WATER") : biome.colors.get("BEACH"))
         }
         if (center.ocean || center.isBorder) color = biome.colors.get("OCEAN")
+        console.log(color)
         drawVoronoiCell(i, color, voronoiObj, centerList)
     }
 }

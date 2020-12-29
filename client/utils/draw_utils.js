@@ -1,6 +1,7 @@
 import { random_hex_color_code } from "./utils"
 import { Biome } from "../biomes";
 import { getNeighborsIndexes } from "./center_and_corner_utils"
+import { createNoisyPolygonList } from "./noiseUtils"
 
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
@@ -13,22 +14,126 @@ function drawPoints(index, points) {
     context.fillRect(point[0], point[1], 3, 3)
 }
 
+export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
+    console.log(noisyPolygonList)
+    let center = noisyPolygonList[index].center
+    let edges = noisyPolygonList[index].edges
+
+    const grdOcean = context.createLinearGradient(0, 0, 900, 0);
+    grdOcean.addColorStop(0, biome.colors.get("OCEAN"));
+    grdOcean.addColorStop(1, "#072042");
+    context.fillStyle = cellColor;
+    console.log("ocean")
+
+    if (center.ocean) {
+        context.fillStyle = grdOcean;
+    }
+
+    let i = 0
+    context.beginPath();
+    context.moveTo(edges[0][0][0], edges[0][0][1])
+
+    for (i; i < edges.length; i++) {
+        let j = 0
+        for (j; j < edges[i].length - 1; j++) {
+            let edge = edges[i]
+
+            context.strokeStyle = "white";
+            let x = edge[j + 1][0]
+            let y = edge[j + 1][1]
+            context.lineTo(x, y)
+            // context.font = "15px Arial";
+            // context.strokeText(x.toFixed(2) + ", " + y.toFixed(2), x, y)
+            context.stroke();
+        }
+    }
+
+    context.fill()
+
+    //context.closePath()
+
+    // voronoiObj.voronoi.renderCell(index, context)
+
+
+    if (!center.ocean) {
+        context.lineWidth = 1;
+        context.strokeStyle = "grey";
+
+        context.stroke()
+    }
+
+    // context.fill();
+    // context.closePath()
+
+
+    // Draw black map outline
+    // if (center.isCoast) {
+    //     let neighborsIndexes = getNeighborsIndexes(center, voronoiObj)
+    //     let i = 0
+    //     for (i; i < neighborsIndexes.length; i++) {
+    //         let neighborIndex = neighborsIndexes[i]
+    //         let neighbor = centerList[neighborIndex]
+    //         if (neighbor.ocean) {
+    //             let centerVertices = voronoiObj.voronoi.cellPolygon(center.index)
+    //             let neighborVertices = voronoiObj.voronoi.cellPolygon(neighbor.index)
+
+    //             let maxLen = Math.max(centerVertices.length, neighborVertices.length)
+    //             let biggerArray = (maxLen == centerVertices.length) ? centerVertices : neighborVertices
+    //             let smallerArray = (biggerArray == centerVertices) ? neighborVertices : centerVertices
+
+    //             let j = 0
+    //             let startPoint = null
+    //             let endPoint = null
+    //             for (j; j < biggerArray.length; j++) {
+    //                 let k = 0
+    //                 for (k; k < smallerArray.length; k++) {
+
+    //                     if (biggerArray[j][0] === smallerArray[k][0] &&
+    //                         biggerArray[j][1] === smallerArray[k][1]) {
+    //                         if (startPoint == null) {
+    //                             startPoint = biggerArray[j]
+    //                             break
+    //                         }
+    //                         // The polygon closes on its original point
+    //                         // Prevent the end point from being the polygon's origin point
+    //                         if (biggerArray[j][0] != startPoint[0] &&
+    //                             biggerArray[j][1] != startPoint[1]) {
+    //                             endPoint = biggerArray[j]
+    //                             break
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //             context.beginPath();
+    //             context.strokeStyle = "black";
+
+    //             context.lineWidth = 4;
+    //             context.moveTo(startPoint[0], startPoint[1])
+    //             context.lineTo(endPoint[0], endPoint[1])
+    //             context.stroke();
+
+    //             context.closePath()
+    //         }
+    //     }
+    // }
+
+}
 
 export function drawVoronoiCell(index, cellColor, voronoiObj, centerList) {
     let center = centerList[index]
 
     context.beginPath();
-    const grd = context.createLinearGradient(0, 0, 400, 0);
-    grd.addColorStop(0, cellColor);
-    grd.addColorStop(1, "green");
+    const grdOcean = context.createLinearGradient(0, 0, 900, 0);
+    grdOcean.addColorStop(0, biome.colors.get("OCEAN"));
+    grdOcean.addColorStop(1, "#072042");
     context.fillStyle = cellColor;
 
-    // ocean or lake
-    if (center.ocean || (!center.ocean && center.isWater)) {
-        context.fillStyle = cellColor;
+    if (center.ocean) {
+        context.fillStyle = grdOcean;
     }
 
     voronoiObj.voronoi.renderCell(index, context)
+
 
     if (!center.ocean) {
         context.lineWidth = 1;
@@ -41,6 +146,7 @@ export function drawVoronoiCell(index, cellColor, voronoiObj, centerList) {
     context.closePath()
 
 
+    // Draw black map outline
     if (center.isCoast) {
         let neighborsIndexes = getNeighborsIndexes(center, voronoiObj)
         let i = 0

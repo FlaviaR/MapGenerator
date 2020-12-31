@@ -9,14 +9,14 @@ const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const width = canvas.width
 const height = canvas.height
-let num = 3
+let num = 200
 const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
 const extendedButton = document.getElementById("longMap");
 const undoButton = document.getElementById("undoButton");
 const displayBiomesCheckbox = document.getElementById("displayBiomes");
-const biomeSlider = document.getElementById("biomeSlider")
+const noiseSlider = document.getElementById("noiseSlider")
 
 let displayBiome = false
 
@@ -25,13 +25,14 @@ let centerList = []
 let voronoiObj = new VoronoiObj(points, width, height)
 let curMap = mapState[1]
 let previousState = []
+let noiseAmount = 0
 context.clearRect(0, 0, width, height);
 
 const generateMapType = (mapState, createNewMap) => {
     curMap = mapState
     centerList = generateMap(mapState, centerList, width, createNewMap)
     centerList = finishEcosystemAssignments(centerList, voronoiObj)
-    let noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj)
+    let noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
     drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
     //drawMap(centerList, displayBiome, voronoiObj)
 }
@@ -74,7 +75,9 @@ const undoRelaxation = () => {
     if (previousState.length > 1) previousState.pop() // remove the most recently added state
     let prevState = previousState[previousState.length - 1]
     updateCenterListAndPoints(prevState.centerList, prevState.points)
-    drawMap(centerList, displayBiome, voronoiObj)
+    //drawMap(centerList, displayBiome, voronoiObj)
+    let noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
+    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
 }
 
 function init() {
@@ -96,13 +99,18 @@ displayBiomesCheckbox.addEventListener('change', function () {
     } else {
         displayBiome = false
     }
-    drawMap(centerList, displayBiome, voronoiObj)
+    //drawMap(centerList, displayBiome, voronoiObj)
+    let noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
+    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
+
 });
 
 
 // Update the current slider value (each time you drag the slider handle)
-biomeSlider.oninput = function () {
-    console.log(this.value);
+noiseSlider.oninput = function () {
+    noiseAmount = this.value
+    let noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
+    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
 }
 
 init()

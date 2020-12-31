@@ -13,7 +13,7 @@ function cullPoint(point) {
     return point
 }
 
-export const createNoisyPolygonList = (centerList, voronoiObj) => {
+export const createNoisyPolygonList = (centerList, voronoiObj, noiseAmount) => {
     let noisyPolygonList = []
     // fetch all voronoi vertices
     // calc parameterization
@@ -45,19 +45,18 @@ export const createNoisyPolygonList = (centerList, voronoiObj) => {
                     let B = cullPoint(neighborCorners[k+1])
 
                     if (!edgeHasBeenVisited(A,B, visitedCorners)) {
-                        let noisyEdge = addNoiseToEdge(A, B)
+                        let noisyEdge = addNoiseToEdge(A, B, noiseAmount)
                         visitedCorners.push({a0:A[0], a1:A[1], b0:B[0], b1:B[1], noisy:noisyEdge})
                         polygonNoisyEdges.push(noisyEdge)
                     } 
                     else {
                         let index = fetchMatchingEdge(A, B, visitedCorners)
-                        let noisyEdge = addNoiseToEdge(A, B)
+                        let noisyEdge = addNoiseToEdge(A, B, noiseAmount)
 
                         let visitedCornersCopy = [...visitedCorners[index].noisy].reverse()
                         visitedCornersCopy.splice(1, 1)
                         visitedCornersCopy.push(visitedCornersCopy[visitedCornersCopy.length - 1])
 
-                        console.log("noisy", A, B, noisyEdge, visitedCornersCopy)
                         polygonNoisyEdges.push(visitedCornersCopy)
                     }
                     
@@ -92,7 +91,7 @@ function distanceBetweenPoints(p1, p2) {
     return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2))
 }
 
-function addNoiseToEdge(A, B) {
+function addNoiseToEdge(A, B, noiseAmount) {
     let noisyEdge = []
 
     // X = (1 - t)A + tB 
@@ -105,8 +104,8 @@ function addNoiseToEdge(A, B) {
         let pointB = [t*B[0], t*B[1]]
         let X = [pointA[0] + pointB[0], pointA[1] + pointB[1]]
 
-        let randX = getRandomNumber(100)/10 * 2
-        let randY = getRandomNumber(100)/10 * 2
+        let randX = getRandomNumber(noiseAmount * 10)/10 * 2
+        let randY = getRandomNumber(noiseAmount * 10)/10 * 2
 
         let lineLength = distanceBetweenPoints(A, B)
         let pointDistance = distanceBetweenPoints(X, A)

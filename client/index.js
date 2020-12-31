@@ -22,6 +22,7 @@ let displayBiome = false
 
 let points = Array.from({ length: num }, () => [Math.random() * width, Math.random() * height]);
 let centerList = []
+let noisyPolygonList = []
 let voronoiObj = new VoronoiObj(points, width, height)
 let curMap = mapState[1]
 let previousState = []
@@ -32,9 +33,8 @@ const generateMapType = (mapState, createNewMap) => {
     curMap = mapState
     centerList = generateMap(mapState, centerList, width, createNewMap)
     centerList = finishEcosystemAssignments(centerList, voronoiObj)
-    let noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
+    noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
     drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
-    //drawMap(centerList, displayBiome, voronoiObj)
 }
 
 const generateRandomMap = () => {
@@ -75,8 +75,6 @@ const undoRelaxation = () => {
     if (previousState.length > 1) previousState.pop() // remove the most recently added state
     let prevState = previousState[previousState.length - 1]
     updateCenterListAndPoints(prevState.centerList, prevState.points)
-    //drawMap(centerList, displayBiome, voronoiObj)
-    let noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
     drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
 }
 
@@ -99,17 +97,14 @@ displayBiomesCheckbox.addEventListener('change', function () {
     } else {
         displayBiome = false
     }
-    //drawMap(centerList, displayBiome, voronoiObj)
-    let noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
     drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
 
 });
 
 
-// Update the current slider value (each time you drag the slider handle)
 noiseSlider.oninput = function () {
     noiseAmount = this.value
-    let noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
+    noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
     drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
 }
 

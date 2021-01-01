@@ -9,7 +9,7 @@ const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const width = canvas.width
 const height = canvas.height
-let num = 200
+let num = 100
 const lloydButton = document.getElementById("lloydButton");
 const randomButton = document.getElementById("randomMap");
 const radialButton = document.getElementById("radialMap");
@@ -17,10 +17,11 @@ const extendedButton = document.getElementById("longMap");
 const undoButton = document.getElementById("undoButton");
 const displayBiomesCheckbox = document.getElementById("displayBiomes");
 const noiseSlider = document.getElementById("noiseSlider")
+const numberOfPointsSlider = document.getElementById("numberOfPointsSlider")
 
 let displayBiome = false
 
-let points = Array.from({ length: num }, () => [Math.random() * width, Math.random() * height]);
+let points = Array.from({ length: num + 100}, () => [Math.random() * width, Math.random() * height]);
 let centerList = []
 let noisyPolygonList = []
 let voronoiObj = new VoronoiObj(points, width, height)
@@ -94,6 +95,7 @@ function init() {
     centerList = createCenters(points, voronoiObj)
     previousStateCenterListAndPoints.push({ centerList, points })
     generateRandomMap()
+    previousStateNoisyPolygons.push(noisyPolygonList)
     drawKey()
 }
 
@@ -113,6 +115,11 @@ displayBiomesCheckbox.addEventListener('change', function () {
 
 });
 
+numberOfPointsSlider.oninput = function() {
+    points = Array.from({ length: this.value }, () => [Math.random() * width, Math.random() * height]);
+    voronoiObj.updateVoronoi(points)
+    init()
+}
 
 noiseSlider.oninput = function () {
     noiseAmount = this.value

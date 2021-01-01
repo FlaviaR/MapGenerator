@@ -118,7 +118,10 @@ displayBiomesCheckbox.addEventListener('change', function () {
 numberOfPointsSlider.oninput = function() {
     points = Array.from({ length: this.value }, () => [Math.random() * width, Math.random() * height]);
     voronoiObj.updateVoronoi(points)
-    init()
+    centerList = createCenters(points, voronoiObj)
+    previousStateCenterListAndPoints.push({ centerList, points })
+    generateMapType(curMap, true)
+    previousStateNoisyPolygons.push(noisyPolygonList)
 }
 
 noiseSlider.oninput = function () {

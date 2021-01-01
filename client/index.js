@@ -25,7 +25,8 @@ let centerList = []
 let noisyPolygonList = []
 let voronoiObj = new VoronoiObj(points, width, height)
 let curMap = mapState[1]
-let previousState = []
+let previousStateCenterListAndPoints = []
+let previousStateNoisyPolygons = []
 let noiseAmount = 0
 context.clearRect(0, 0, width, height);
 
@@ -55,6 +56,10 @@ const updateCenterListAndPoints = (newCenterList, newPoints) => {
     voronoiObj.updateVoronoi(points)
 }
 
+const updateNoisyPolygonList = (newNoisyPolygonList) => {
+    noisyPolygonList = newNoisyPolygonList
+}
+
 const relaxVoronoiPolygons = () => {
     let relaxed = relaxVoronoi(points, voronoiObj, centerList)
 
@@ -67,20 +72,27 @@ const relaxVoronoiPolygons = () => {
     }
 
     updateCenterListAndPoints(relaxed.centerList, relaxed.points)
-    previousState.push({ centerList, points })
+    previousStateCenterListAndPoints.push({ centerList, points })
+    previousStateNoisyPolygons.push(noisyPolygonList)
     generateMapType(curMap, false)
 }
 
 const undoRelaxation = () => {
-    if (previousState.length > 1) previousState.pop() // remove the most recently added state
-    let prevState = previousState[previousState.length - 1]
-    updateCenterListAndPoints(prevState.centerList, prevState.points)
+    if (previousStateCenterListAndPoints.length > 1) previousStateCenterListAndPoints.pop() // remove the most recently added state
+    let prevState = previousStateCenterListAndPoints[previousStateCenterListAndPoints.length - 1]
+
+    if (previousStateNoisyPolygons.length > 1) previousStateNoisyPolygons.pop()
+    let prevStateNoisyPolygon = previousStateNoisyPolygons[previousStateNoisyPolygons.length - 1]
+
+    if (prevState) updateCenterListAndPoints(prevState.centerList, prevState.points)
+    if (prevStateNoisyPolygon) updateNoisyPolygonList(prevStateNoisyPolygon)
+    
     drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
 }
 
 function init() {
     centerList = createCenters(points, voronoiObj)
-    previousState.push({ centerList, points })
+    previousStateCenterListAndPoints.push({ centerList, points })
     generateRandomMap()
     drawKey()
 }

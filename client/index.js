@@ -18,6 +18,10 @@ const undoButton = document.getElementById("undoButton");
 const displayBiomesCheckbox = document.getElementById("displayBiomes");
 const noiseSlider = document.getElementById("noiseSlider")
 const numberOfPointsSlider = document.getElementById("numberOfPointsSlider")
+const moistureSlider = document.getElementById("moistureSlider")
+const moistureSpan = document.getElementById("moistureSpan")
+const elevationSlider = document.getElementById("elevationSlider")
+const elevationSpan = document.getElementById("elevationSpan")
 
 let displayBiome = false
 
@@ -29,6 +33,9 @@ let curMap = mapState[1]
 let previousStateCenterListAndPoints = []
 let previousStateNoisyPolygons = []
 let noiseAmount = 0
+let moistureAmount = 1.0
+let elevationAmount = 1.0
+
 context.clearRect(0, 0, width, height);
 
 const generateMapType = (mapState, createNewMap) => {
@@ -36,7 +43,7 @@ const generateMapType = (mapState, createNewMap) => {
     centerList = generateMap(mapState, centerList, width, createNewMap)
     centerList = finishEcosystemAssignments(centerList, voronoiObj)
     noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
-    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
+    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj, moistureAmount, elevationAmount)
 }
 
 const generateRandomMap = () => {
@@ -88,7 +95,7 @@ const undoRelaxation = () => {
     if (prevState) updateCenterListAndPoints(prevState.centerList, prevState.points)
     if (prevStateNoisyPolygon) updateNoisyPolygonList(prevStateNoisyPolygon)
     
-    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
+    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj, moistureAmount, elevationAmount)
 }
 
 function init() {
@@ -127,7 +134,19 @@ numberOfPointsSlider.oninput = function() {
 noiseSlider.oninput = function () {
     noiseAmount = this.value
     noisyPolygonList = createNoisyPolygonList(centerList, voronoiObj, noiseAmount)
-    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj)
+    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj, moistureAmount, elevationAmount)
+}
+
+moistureSlider.oninput = function() {
+    moistureAmount = this.value
+    moistureSpan.innerHTML = this.value
+    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj, moistureAmount, elevationAmount)
+}
+
+elevationSlider.oninput = function() {
+    elevationAmount = this.value
+    elevationSpan.innerHTML = elevationAmount
+    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj, moistureAmount, elevationAmount)
 }
 
 init()

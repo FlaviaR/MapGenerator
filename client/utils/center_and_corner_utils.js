@@ -27,7 +27,7 @@ function assignFaceElevationsAndMoisture(center) {
 }
 
 // Return a biome type based on the given center's moisture levels
-function fetchBiome(center) {
+export function fetchBiome(center) {
 	if (center.ocean) {
 		return "OCEAN";
 	} else if (center.isWater) {
@@ -251,6 +251,9 @@ export function initCenter(point, voronoiIndex, voronoiObj, oldCenter) {
 		center.isWater = oldCenter.isWater
 		center.ocean = oldCenter.ocean
 	} else center = assignFaceElevationsAndMoisture(center)
+
+	center.moistureOriginal = center.moisture
+	center.elevationOriginal = center.elevation
 	center.biome = (oldCenter == null) ? fetchBiome(center) : oldCenter.biome;
 
 	return center;

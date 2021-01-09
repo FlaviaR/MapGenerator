@@ -75,7 +75,7 @@ function elevationControl(elevationAmount, center) {
 }
 
 function updateLake(center, noisyPolygonList, voronoiObj) {
-    if ((center.isWater && !center.ocean) || center.isDriedUpLake) {
+    if ((center.isWater && !center.ocean && !center.isCoast) || center.isDriedUpLake) {
         const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
         let moistureAverage = 0
         let j = 0
@@ -89,9 +89,12 @@ function updateLake(center, noisyPolygonList, voronoiObj) {
             center.isWater = false
             center.biome = "BARE"
             center.isDriedUpLake = true
-        } else if (moistureAverage > 0.35 && center.isDriedUpLake){
-            center.isWater = true
-            center.biome = "LAKE"
+        } else {
+            if (center.isDriedUpLake) {
+                center.isWater = true
+                center.isDriedUpLake = false
+                center.biome = fetchBiome(center)
+            }
         }
     }
     return center
@@ -107,7 +110,7 @@ export function drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj, moistur
         center = moistureControl(moistureAmount, center)
         center = elevationControl(elevationAmount, center)
         center = updateLake(center, noisyPolygonList, voronoiObj)
-        
+
         if (displayBiome) {
             color = (center.isCoast) ? biome.colors.get("BEACH") : biome.colors.get(center.biome)
             if (center.isWater) color = biome.colors.get("WATER")

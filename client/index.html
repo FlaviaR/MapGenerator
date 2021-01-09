@@ -5,56 +5,72 @@
     <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 </head>
 
-<body>
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Yusei+Magic&display=swap" rel="stylesheet">
+
+<body style="font-family: 'Yusei Magic', sans-serif;">
     <div style="display:flex; justify-content: center; align-items: center; color: white; background-color: black;">
         <div>
             <canvas id="myCanvas" width="750" height="750"></canvas><br><br>
             <canvas id="biomeKey" width="800" height="120"></canvas><br><br>
         </div>
         <div>
-            <button id="lloydButton">Relax Points</button> <br>
-            <button id="undoButton">Undo</button><br><br>
-            
-            <button id="randomMap">Square Map</button><br>
-            <button id="radialMap">Radial Map</button><br>
-            <button id="longMap">Long Map</button><br>
-
-            <div style = "width:200px">
-                <br>
-                <span>Noise</span>
-                <div class="slidecontainer">
-                    <input type="range" min="0" max="10" value="0" class="slider" id="noiseSlider">
+            <div style="display:flex;">
+                <div style="border-style: solid; border-radius: 5px; display: 
+                flex; flex-direction: column; padding-top: 10px; 
+                padding-bottom: 10px; padding-left:10px; 
+                padding-right: 10px; align-items: center;">
+                    <span>Map Types</span><br>
+                    <button id="randomMap" style="font-family: 'Yusei Magic', sans-serif;">Square Map</button><br>
+                    <button id="radialMap" style="font-family: 'Yusei Magic', sans-serif;">Radial Map</button><br>
+                    <button id="longMap" style="font-family: 'Yusei Magic', sans-serif;">Long Map</button><br>
+                </div>
+                <div style="border-style: solid; border-radius: 5px; display: flex; 
+                flex-direction: column; padding-top: 10px; padding-bottom: 10px; 
+                padding-left:10px; padding-right: 10px; margin-left: 10px; align-items: center;">
+                    <span>Relaxer</span>
+                    <button id="lloydButton" style="font-family: 'Yusei Magic', sans-serif;">Relax Points</button> <br>
+                    <button id="undoButton" style="font-family: 'Yusei Magic', sans-serif;">Undo</button><br><br>
                 </div>
             </div>
-            <div>
+            <div style="width:200px; padding-left: 15px;">
                 <br>
-                <span>Number of Points</span>
-                <div class="slidecontainer">
-                    <input type="range" min="100" max="1000" value="100" step="100" class="slider"
-                        id="numberOfPointsSlider">
-                </div>
-            </div><br>
-            <div>
-                <br>
-                <span>Elevation Control</span>
-                <div class="slidecontainer" style="flex: row;">
-                    <input type="range" min="0" max="2" value="0" step="0.1" class="slider"
-                        id="elevationSlider">
-                    <span id="elevationSpan">1</span>
+                <div style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
 
-                </div>
-            </div> 
-            <div>
-                <br>
-                <span>Moisture Control</span>
-                <div class="slidecontainer" style="flex: row;">
-                    <input type="range" min="0" max="2" value="0" step="0.1" class="slider"
-                        id="moistureSlider">
-                    <span id="moistureSpan">1</span>
-                </div>
+                    <span>Noise</span>
+                    <div class="slidecontainer">
+                        <input type="range" min="0" max="10" value="0" class="slider" id="noiseSlider">
+                    </div>
+                </div> <br>
+
+                <div style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
+                    <br>
+                    <span>Number of Points</span>
+                    <div class="slidecontainer">
+                        <input type="range" min="100" max="1000" value="100" step="100" class="slider"
+                            id="numberOfPointsSlider">
+                    </div>
+                </div><br>
+                <div style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
+                    <br>
+                    <span>Elevation Control</span>
+                    <div class="slidecontainer" style="flex: row;">
+                        <input type="range" min="0" max="2" value="0" step="0.1" class="slider" id="elevationSlider">
+                        <span id="elevationSpan">1</span>
+
+                    </div>
+                </div> <br>
+                <div style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
+                    <br>
+                    <span>Moisture Control</span>
+                    <div class="slidecontainer" style="flex: row;">
+                        <input type="range" min="0" max="2" value="0" step="0.1" class="slider" id="moistureSlider">
+                        <span id="moistureSpan">1</span>
+                    </div>
+                </div><br>
+                <input type="checkbox" id="displayBiomes">
+                <label> Display Biomes</label>
             </div>
-            <input type="checkbox" id="displayBiomes">
-            <label> Display Biomes</label>
 
         </div>
     </div>

@@ -59,46 +59,48 @@ export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
         for (i; i < neighborsIndexes.length; i++) {
             let neighborIndex = neighborsIndexes[i]
             let neighbor = noisyPolygonList[neighborIndex]
-            if (neighbor.ocean) {
-                let centerVertices = voronoiObj.voronoi.cellPolygon(center.index)
-                let neighborVertices = voronoiObj.voronoi.cellPolygon(neighbor.index)
+            if (neighbor) {
+                if (neighbor.ocean) {
+                    let centerVertices = voronoiObj.voronoi.cellPolygon(center.index)
+                    let neighborVertices = voronoiObj.voronoi.cellPolygon(neighbor.index)
 
-                let maxLen = Math.max(centerVertices.length, neighborVertices.length)
-                let biggerArray = (maxLen == centerVertices.length) ? centerVertices : neighborVertices
-                let smallerArray = (biggerArray == centerVertices) ? neighborVertices : centerVertices
+                    let maxLen = Math.max(centerVertices.length, neighborVertices.length)
+                    let biggerArray = (maxLen == centerVertices.length) ? centerVertices : neighborVertices
+                    let smallerArray = (biggerArray == centerVertices) ? neighborVertices : centerVertices
 
-                let j = 0
-                let startPoint = null
-                let endPoint = null
-                for (j; j < biggerArray.length; j++) {
-                    let k = 0
-                    for (k; k < smallerArray.length; k++) {
+                    let j = 0
+                    let startPoint = null
+                    let endPoint = null
+                    for (j; j < biggerArray.length; j++) {
+                        let k = 0
+                        for (k; k < smallerArray.length; k++) {
 
-                        if (biggerArray[j][0] === smallerArray[k][0] &&
-                            biggerArray[j][1] === smallerArray[k][1]) {
-                            if (startPoint == null) {
-                                startPoint = biggerArray[j]
-                                break
-                            }
-                            // The polygon closes on its original point
-                            // Prevent the end point from being the polygon's origin point
-                            if (biggerArray[j][0] != startPoint[0] &&
-                                biggerArray[j][1] != startPoint[1]) {
-                                endPoint = biggerArray[j]
-                                break
+                            if (biggerArray[j][0] === smallerArray[k][0] &&
+                                biggerArray[j][1] === smallerArray[k][1]) {
+                                if (startPoint == null) {
+                                    startPoint = biggerArray[j]
+                                    break
+                                }
+                                // The polygon closes on its original point
+                                // Prevent the end point from being the polygon's origin point
+                                if (biggerArray[j][0] != startPoint[0] &&
+                                    biggerArray[j][1] != startPoint[1]) {
+                                    endPoint = biggerArray[j]
+                                    break
+                                }
                             }
                         }
                     }
+                    context.beginPath();
+                    context.strokeStyle = "black";
+
+                    context.lineWidth = 4;
+                    context.moveTo(startPoint[0], startPoint[1])
+                    context.lineTo(endPoint[0], endPoint[1])
+                    context.stroke();
+
+                    context.closePath()
                 }
-                context.beginPath();
-                context.strokeStyle = "black";
-
-                context.lineWidth = 4;
-                context.moveTo(startPoint[0], startPoint[1])
-                context.lineTo(endPoint[0], endPoint[1])
-                context.stroke();
-
-                context.closePath()
             }
         }
     }

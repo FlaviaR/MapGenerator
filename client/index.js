@@ -142,7 +142,7 @@ moistureSlider.oninput = function() {
     if (moistureAmount < 1) {
         console.log(moistureAmount)
         moistureSpan.innerHTML = "-" + moistureAmount
-    } if (moistureAmount > 1) { 
+    } else if (moistureAmount > 1) { 
         moistureSpan.innerHTML = "+" + Math.abs((1 - moistureAmount).toFixed(1))
     } else moistureSpan.innerHTML = 0    
     drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj, moistureAmount, elevationAmount)
@@ -152,7 +152,7 @@ elevationSlider.oninput = function() {
     elevationAmount = this.value
     if (elevationAmount < 1) {
         elevationSpan.innerHTML = "-" + elevationAmount
-    } if (elevationAmount > 1) { 
+    } else if (elevationAmount > 1) { 
         elevationSpan.innerHTML = "+" + Math.abs((1 - elevationAmount).toFixed(1))
     } else elevationSpan.innerHTML = 0
     drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj, moistureAmount, elevationAmount)

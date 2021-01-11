@@ -25,7 +25,7 @@ const elevationSpan = document.getElementById("elevationSpan")
 
 let displayBiome = false
 
-let points = Array.from({ length: num + 100}, () => [Math.random() * width, Math.random() * height]);
+let points = Array.from({ length: num}, () => [Math.random() * width, Math.random() * height]);
 let centerList = []
 let noisyPolygonList = []
 let voronoiObj = new VoronoiObj(points, width, height)

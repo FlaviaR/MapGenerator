@@ -7,11 +7,9 @@ const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const biome = new Biome()
 
-function drawPoints(index, points) {
-    let point = points[index]
-
-    context.fillStyle = "black";
-    context.fillRect(point[0], point[1], 3, 3)
+function drawPoints(x, y) {
+    context.fillStyle = "red";
+    context.fillRect(x, y, 3, 3)
 }
 
 export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
@@ -52,22 +50,26 @@ export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
 
     context.fill()
 
-    //Draw black map outline
+    //Draw black map outline - fix this whenever you feel too happy
     if (center.isCoast) {
         let neighborsIndexes = getNeighborsIndexes(center, voronoiObj)
         let i = 0
         for (i; i < neighborsIndexes.length; i++) {
             let neighborIndex = neighborsIndexes[i]
-            let neighbor = noisyPolygonList[neighborIndex]
+            let neighbor = noisyPolygonList.filter(obj => {
+                return obj.center.index === neighborIndex
+            })
+            let neighborCenter = neighbor[0].center
+            neighbor = neighbor[0]
             if (neighbor) {
-                if (neighbor.ocean) {
+                if (neighborCenter.ocean) {
                     let centerVertices = voronoiObj.voronoi.cellPolygon(center.index)
-                    let neighborVertices = voronoiObj.voronoi.cellPolygon(neighbor.index)
-
+                    let neighborVertices = voronoiObj.voronoi.cellPolygon(neighborCenter.index)
                     let maxLen = Math.max(centerVertices.length, neighborVertices.length)
                     let biggerArray = (maxLen == centerVertices.length) ? centerVertices : neighborVertices
                     let smallerArray = (biggerArray == centerVertices) ? neighborVertices : centerVertices
 
+                    // Find shared edge
                     let j = 0
                     let startPoint = null
                     let endPoint = null
@@ -91,21 +93,48 @@ export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
                             }
                         }
                     }
-                    context.beginPath();
-                    context.strokeStyle = "black";
+                    if (startPoint && endPoint) {
+                        let a = 0
+                        let res = []
+                        for (a; a < neighbor.edges.length; a++) {
+                            let edges = neighbor.edges[a]
+                            let edgesStr = edges.map(JSON.stringify);
+                            if (edgesStr.indexOf(JSON.stringify(startPoint)) >= 0 && edgesStr.indexOf(JSON.stringify(endPoint)) >= 0) {
+                                res = edges
+                                break
+                            }
+                        }
 
-                    context.lineWidth = 4;
-                    context.moveTo(startPoint[0], startPoint[1])
-                    context.lineTo(endPoint[0], endPoint[1])
-                    context.stroke();
+                        context.beginPath();
+                        context.strokeStyle = "black";
+                        context.lineWidth = 3;
+                        context.moveTo(res[0][0], res[0][1])
 
-                    context.closePath()
+                        let r = 0
+                        for (r; r < res.length; r++) {
+                            let point = res[r]
+
+                            let x = point[0]
+                            let y = point[1]
+                            context.lineTo(x, y)
+                            context.stroke();
+                        }
+                    }
+                    // context.strokeStyle = "black";
+
+                    // context.lineWidth = 4;
+                    // context.moveTo(startPoint[0], startPoint[1])
+                    // context.lineTo(endPoint[0], endPoint[1])
+                    // context.stroke();
+
                 }
+
+
             }
         }
     }
-
 }
+
 
 export function drawVoronoiCell(index, cellColor, voronoiObj, centerList) {
     let center = centerList[index]

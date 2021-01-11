@@ -142,7 +142,6 @@ export function drawMap(centerList, displayBiome, voronoiObj) {
             color = (center.isWater ? biome.colors.get("WATER") : biome.colors.get("BEACH"))
         }
         if (center.ocean || center.isBorder) color = biome.colors.get("OCEAN")
-        console.log(color)
         drawVoronoiCell(i, color, voronoiObj, centerList)
     }
 }

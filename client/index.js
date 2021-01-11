@@ -140,7 +140,6 @@ noiseSlider.oninput = function () {
 moistureSlider.oninput = function() {
     moistureAmount = this.value
     if (moistureAmount < 1) {
-        console.log(moistureAmount)
         moistureSpan.innerHTML = "-" + moistureAmount
     } else if (moistureAmount > 1) { 
         moistureSpan.innerHTML = "+" + Math.abs((1 - moistureAmount).toFixed(1))

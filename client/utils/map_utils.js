@@ -84,7 +84,6 @@ function updateLake(center, noisyPolygonList, voronoiObj) {
             moistureAverage += neighbor.center.moisture
         }
         moistureAverage /= neighborIndexes.length
-        console.log(moistureAverage)
         if (moistureAverage < 0.35) {
             center.isWater = false
             center.biome = "BARE"

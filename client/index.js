@@ -81,6 +81,7 @@ const relaxVoronoiPolygons = () => {
 
     updateCenterListAndPoints(relaxed.centerList, relaxed.points)
     previousStateCenterListAndPoints.push({ centerList, points })
+    updateNoisyPolygonList(noisyPolygonList)
     previousStateNoisyPolygons.push(noisyPolygonList)
     generateMapType(curMap, false)
 }
@@ -95,7 +96,7 @@ const undoRelaxation = () => {
     if (prevState) updateCenterListAndPoints(prevState.centerList, prevState.points)
     if (prevStateNoisyPolygon) updateNoisyPolygonList(prevStateNoisyPolygon)
     
-    drawNoisyMap(noisyPolygonList, displayBiome, voronoiObj, moistureAmount, elevationAmount)
+    generateMapType(curMap, false)
 }
 
 function init() {

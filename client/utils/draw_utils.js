@@ -1,18 +1,17 @@
-import { random_hex_color_code } from "./utils"
 import { Biome } from "../biomes";
 import { getNeighborsIndexes } from "./center_and_corner_utils"
-import { createNoisyPolygonList } from "./noiseUtils"
+import { Center } from "../center";
 
 const canvas = document.getElementById("myCanvas");
 const context = canvas.getContext('2d');
 const biome = new Biome()
 
-function drawPoints(x, y) {
-    context.fillStyle = "red";
+function drawPoints(x, y, color) {
+    context.fillStyle = color;
     context.fillRect(x, y, 3, 3)
 }
 
-export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
+export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList, logThis) {
     let center = noisyPolygonList[index].center
     let edges = noisyPolygonList[index].edges
 
@@ -50,7 +49,7 @@ export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
 
     context.fill()
 
-    //Draw black map outline - fix this whenever you feel too happy
+    //Draw black map outline - optimize this whenever you feel too happy
     if (center.isCoast) {
         let neighborsIndexes = getNeighborsIndexes(center, voronoiObj)
         let i = 0
@@ -61,6 +60,7 @@ export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
             })
             let neighborCenter = neighbor[0].center
             neighbor = neighbor[0]
+
             if (neighbor) {
                 if (neighborCenter.ocean) {
                     let centerVertices = voronoiObj.voronoi.cellPolygon(center.index)
@@ -68,6 +68,7 @@ export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
                     let maxLen = Math.max(centerVertices.length, neighborVertices.length)
                     let biggerArray = (maxLen == centerVertices.length) ? centerVertices : neighborVertices
                     let smallerArray = (biggerArray == centerVertices) ? neighborVertices : centerVertices
+
 
                     // Find shared edge
                     let j = 0
@@ -99,25 +100,29 @@ export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList) {
                         for (a; a < neighbor.edges.length; a++) {
                             let edges = neighbor.edges[a]
                             let edgesStr = edges.map(JSON.stringify);
+                            
                             if (edgesStr.indexOf(JSON.stringify(startPoint)) >= 0 && edgesStr.indexOf(JSON.stringify(endPoint)) >= 0) {
                                 res = edges
                                 break
                             }
                         }
 
-                        context.beginPath();
-                        context.strokeStyle = "black";
-                        context.lineWidth = 3;
-                        context.moveTo(res[0][0], res[0][1])
+                        if (res[0]) {
 
-                        let r = 0
-                        for (r; r < res.length; r++) {
-                            let point = res[r]
+                            context.beginPath();
+                            context.strokeStyle = "black";
+                            context.lineWidth = 3;
+                            context.moveTo(res[0][0], res[0][1])
 
-                            let x = point[0]
-                            let y = point[1]
-                            context.lineTo(x, y)
-                            context.stroke();
+                            let r = 0
+                            for (r; r < res.length; r++) {
+                                let point = res[r]
+
+                                let x = point[0]
+                                let y = point[1]
+                                context.lineTo(x, y)
+                                context.stroke();
+                            }
                         }
                     }
                     // context.strokeStyle = "black";

@@ -1,8 +1,6 @@
 import {getRandomNumber} from './utils/utils'
 import {pointLength} from './utils/map_utils'
 
-var seedrandom = require('seedrandom');
-
 // Factor should ideally be between 1.0 and 2.0
 // lower bounds lead to more constricted islands
 const ISLAND_FACTOR = 0.2

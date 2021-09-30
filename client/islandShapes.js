@@ -9,8 +9,7 @@ const ISLAND_FACTOR = 0.2
 
 // Generates a randomized map -- very sparse
 export function generateRandomMap(point) {
-    // let num = Math.floor(seedrandom(point[0] + point[1] + 0.5)() * 100) 
-    let num = getRandomNumber(100);
+    let num = Math.floor(seedrandom(point[0] + point[1] + 0.5)() * 100)
     if (num % 3 == 0) return false;
     else return true;
 }
@@ -18,8 +17,8 @@ export function generateRandomMap(point) {
 // Generates a circular map using overlapping sine waves (ensue black magic)
 // Center point of a voronoi cell
 export function generateRadialMap(point) {
-    let seed = Math.floor(seedrandom(point[0] + point[1] + 0.5))
-    let bumps = getRandomNumber(6) + 1
+    Math.seedrandom(point[0] + point[1] + 0.5)
+    let bumps =  getRandomNumber(6) + 1
     let dipAngle = getRandomNumber(100)/100 * 2 * Math.PI
     let startAngle = getRandomNumber(100)/100 * 2 * Math.PI
     let dipWidth = getRandomNumber(5) / 10 + 0.2 // random between 0.2 and 0.7
@@ -41,6 +40,7 @@ export function generateRadialMap(point) {
 // Generates a circular map using overlapping sine waves (ensue black magic)
 // Center point of a voronoi cell
 export function generateLongMap(point) {
+    Math.seedrandom(point[0] + point[1] + 0.5)
     let bumps = getRandomNumber(6)
     let dipAngle = getRandomNumber(1) * 2 * Math.PI
     let startAngle = getRandomNumber(1) * 2 * Math.PI

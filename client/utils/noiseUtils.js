@@ -27,7 +27,7 @@ export const createNoisyPolygonList = (centerList, voronoiObj, noiseAmount) => {
 
 	while (queue.getLength() != 0) {
 		let center = queue.dequeue()
-        const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
+		const neighborIndexes = (center.neighbors) ? center.neighbors : getNeighborsIndexes(center, voronoiObj)
         neighborIndexes.push(center.index) // make sure first center is visited as well
 
 		let j = 0

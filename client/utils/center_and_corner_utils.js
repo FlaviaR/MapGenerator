@@ -146,11 +146,11 @@ function assignCoasts(centerList, voronoiObj) {
 	for (i; i < centerList.length; i++) {
 		let center = centerList[i]
 
-		const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
+		const neighborIndexes = (center.neighbors) ? center.neighbors : getNeighborsIndexes(center, voronoiObj)
 		let j = 0
 		for (j; j < neighborIndexes.length; j++) {
 			let neighbor = centerList[neighborIndexes[j]]
-
+			
 			if (!center.ocean && neighbor.ocean) {
 				center.isCoast = true
 				break;
@@ -179,7 +179,7 @@ function assignOcean(centerList, voronoiObj) {
 
 	while (queue.getLength() != 0) {
 		let center = queue.dequeue()
-		const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
+		const neighborIndexes = (center.neighbors) ? center.neighbors : getNeighborsIndexes(center, voronoiObj)
 		let j = 0
 		for (j; j < neighborIndexes.length; j++) {
 			let neighbor = centerList[neighborIndexes[j]]

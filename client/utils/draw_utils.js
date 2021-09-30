@@ -51,7 +51,7 @@ export function drawNoisyCell(index, cellColor, voronoiObj, noisyPolygonList, lo
 
     //Draw black map outline - optimize this whenever you feel too happy
     if (center.isCoast) {
-        let neighborsIndexes = getNeighborsIndexes(center, voronoiObj)
+		const neighborsIndexes = (center.neighbors) ? center.neighbors : getNeighborsIndexes(center, voronoiObj)
         let i = 0
         for (i; i < neighborsIndexes.length; i++) {
             let neighborIndex = neighborsIndexes[i]

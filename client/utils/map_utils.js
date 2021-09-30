@@ -76,7 +76,7 @@ function elevationControl(elevationAmount, center) {
 
 function updateLake(center, noisyPolygonList, voronoiObj) {
     if ((center.isWater && !center.ocean && !center.isCoast) || center.isDriedUpLake) {
-        const neighborIndexes = getNeighborsIndexes(center, voronoiObj)
+		const neighborIndexes = (center.neighbors) ? center.neighbors : getNeighborsIndexes(center, voronoiObj)
         let moistureAverage = 0
         let j = 0
         for (j; j < neighborIndexes.length; j++) {

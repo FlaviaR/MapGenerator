@@ -22,6 +22,7 @@
                 padding-right: 10px; align-items: center;">
                     <span>Map Types</span><br>
                     <button id="randomMap" style="font-family: 'Yusei Magic', sans-serif;">Square Map</button><br>
+
                     <button id="radialMap" style="font-family: 'Yusei Magic', sans-serif;">Radial Map</button><br>
                     <button id="longMap" style="font-family: 'Yusei Magic', sans-serif;">Long Map</button><br>
                 </div>
@@ -35,7 +36,8 @@
             </div>
             <div style="width:200px; padding-left: 15px;">
                 <br>
-                <div style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
+                <div
+                    style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
 
                     <span>Noise</span>
                     <div class="slidecontainer">
@@ -43,7 +45,8 @@
                     </div>
                 </div> <br>
 
-                <div style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
+                <div
+                    style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
                     <br>
                     <span>Number of Points</span>
                     <div class="slidecontainer">
@@ -51,7 +54,8 @@
                             id="numberOfPointsSlider">
                     </div>
                 </div><br>
-                <div style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
+                <div
+                    style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
                     <br>
                     <span>Elevation Control</span>
                     <div class="slidecontainer" style="flex: row;">
@@ -60,7 +64,8 @@
 
                     </div>
                 </div> <br>
-                <div style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
+                <div
+                    style="border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center;">
                     <br>
                     <span>Moisture Control</span>
                     <div class="slidecontainer" style="flex: row;">
@@ -69,7 +74,14 @@
                     </div>
                 </div><br>
                 <input type="checkbox" id="displayBiomes">
-                <label> Display Biomes</label>
+                <label> Display Biomes</label><br><br>
+                <div
+                    style="padding: 20px; border-style: solid; border-radius: 5px; display: flex; flex-direction: column; align-items: center; width: 200px;">
+                    <button id="downloadMapPointsButton" style="font-family: 'Yusei Magic', sans-serif;">Download Map
+                        Points</button>
+                    <input type="file" id="mapPointsInput" multiple><br><br>
+                    <button id="reloadPoints" style="font-family: 'Yusei Magic', sans-serif;">Reload Uploaded Map</button>
+                </div>
             </div>
 
         </div>
@@ -77,6 +89,8 @@
 
     <!-- <script type="module" src="index.js"></script> -->
     <script src="dist/bundle.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js">
+    </script>
 </body>
 
 </html>

@@ -7,7 +7,8 @@ const ISLAND_FACTOR = 0.2
 
 // Generates a randomized map -- very sparse
 export function generateRandomMap(point) {
-    let num = Math.floor(seedrandom(point[0] + point[1] + 0.5)() * 100)
+    Math.seedrandom(point[0] + point[1] + 0.5)
+    let num = Math.floor() * 100
     if (num % 3 == 0) return false;
     else return true;
 }

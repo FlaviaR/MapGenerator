@@ -140,13 +140,30 @@ const uploadMapPoints = () => {
         let split = content.split('\n\n')
 
         let mapType = split[0]
+        let moisture = split[1].split(": ")[1]
+        let noise = split[2].split(": ")[1]
+        let num_of_points = split[3].split(": ")[1]
+        let elevation = split[4].split(": ")[1]
+        let display_biome = split[5].split(": ")[1]
+
+        noiseAmount = Number(noise)
+        moistureAmount = Number(moisture)
+        elevationAmount = Number(elevation)
+        displayBiome = display_biome
+
+        elevationSlider.value = elevationAmount
+        moistureSlider.value = moistureAmount
+        numberOfPointsSlider.value = num_of_points
+        noiseSlider.vlaue = noiseAmount
+        displayBiomesCheckbox.checked = display_biome
+
         centerList = []
         points = []
         previousStateCenterListAndPoints =[]
         previousStateNoisyPolygons = []
 
-        let i = 1
-        console.log(split.length, mapType)
+        let i = 6
+        console.log(split.length, moisture, noise, num_of_points, elevation, display_biome)
         for (i; i < split.length; i++) {
             try {
                 if (split[i]) {
@@ -188,6 +205,12 @@ const uploadMapPoints = () => {
 
 const downloadMapPoints = () => {
     let text = curMap + "\n\n"
+    text += ("moisture: " + moistureAmount + "\n\n")
+    text += ("noise: " + noiseAmount + "\n\n")
+    text += ("num_of_points: " + points.length + "\n\n")
+    text += ("elevation: " + elevationAmount + "\n\n")
+    text += ("display_biome: " + displayBiome + "\n\n")
+
     let i = 0
     for (i; i < centerList.length; i++) {
         text += JSON.stringify(centerList[i])
